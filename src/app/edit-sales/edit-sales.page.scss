@@ -1,0 +1,34 @@
+.custInput{
+    border-style: solid;
+    border-color: var(--ion-color-light);
+    border-radius: 5px;
+    }
+    .cust-card{
+        border-radius: 5px;
+    }
+
+    .custRow{
+        margin-top: 5rem;
+        }
+
+  .table{
+       text-align: center;
+    width: 100%;
+    margin: 12px;
+  }
+  .red{
+    color:var(--ion-color-danger) 
+   }
+   .darko{
+    color: var(--ion-color-dark)
+   }
+  ion-popover{
+    --offset-y : -30px
+  }
+  .bnone{
+    border: none;
+  } 
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+  td, th {border: 1px solid #dddddd;text-align: center;padding: 8px; font-size: 16px;font-weight: bold;color: black;}

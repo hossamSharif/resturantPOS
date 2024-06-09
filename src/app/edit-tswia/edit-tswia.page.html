@@ -1,0 +1,272 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title> تعديل عملية تسوية جردية</ion-title>
+    <ion-buttons  slot="end">  
+      <div class="poRel">
+        <div class="posAb noti">
+         <ion-label>
+           <ion-text *ngIf="showNotif == true && notifArr.length> 0">{{notifArr.length}}</ion-text> 
+         </ion-label> 
+       </div>
+       <div (click)="presentPopoverNotif($event)">
+         <ion-icon name="notifications-outline"  class="dark"  [ngClass]="{'warn':showNotif == true && notifArr.length> 0 , 'dark': showNotif == false }"></ion-icon> 
+       </div>
+     </div> 
+     <ion-button fill="clear" (click)="presentPopoverNotif($event)">
+      <ion-label><ion-text color="dark" >الإشعارات</ion-text></ion-label>  
+     </ion-button>
+     <ion-button fill="clear" (click)="back()">
+      <ion-icon name="arrow-back-sharp"></ion-icon>
+    </ion-button>
+    </ion-buttons> 
+  <ion-popover  #popoverNotif21 [isOpen]="isOpenNotif" (didDismiss)="didDissmisNotif()">
+   <ng-template>
+     <ion-header>
+       <ion-toolbar dir="rtl" class="ion-text-center">
+         الإشعارات
+       </ion-toolbar>
+     </ion-header>
+     <ion-content  dir="rtl">  
+       <ion-list class="ion-text-center"  *ngIf="LogHistoryLocalArr.length>0">
+        <ion-item *ngFor="let log of LogHistoryLocalArr" >
+        <ion-grid >
+          <ion-row>
+            <ion-col size="9"> 
+                {{log.desc}}    
+            </ion-col>
+            <ion-col size="3">
+              <ion-text color = "primary">{{log.datee | dateAgo}}</ion-text>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item> 
+       </ion-list> 
+     </ion-content>
+   </ng-template>
+ </ion-popover>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- skeleton --> 
+  <ion-content> 
+  <ion-grid  *ngIf="user_info && store_info" >
+    <ion-row dir="rtl">
+      <ion-col size="12">
+        <ion-card  class="ion-no-padding ion-no-margin">
+          <ion-grid class="ion-no-padding ion-no-margin"> 
+            <ion-row>
+              <ion-col size="3" offset="6" class="ion-text-start">
+                <ion-item class="custInput"> 
+                  <ion-input placeholder="أكتب تعليقا" [(ngModel)]="payInvo.payComment"></ion-input>
+                 </ion-item>   
+              </ion-col>
+              <ion-col size="3">
+                <ion-item lines="none">
+                  <input style="width:100%"  type="date"  id="startingDate" name="startingDate" [(ngModel)]="payInvo.pay_date"  />
+                </ion-item>
+              </ion-col>
+            </ion-row>
+           </ion-grid> 
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  
+  <ion-grid class="ion-margin-top" *ngIf="user_info && store_info" >
+    <ion-row dir="rtl" class="ion-justify-content-center">
+      <ion-col size="12"   class="ion-no-padding">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12">
+              <ion-card>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="4"> 
+                      <ion-label  class="ion-padding">
+                        <strong>الصنف</strong>
+                        <ion-text *ngIf="searchLang == 0">(عربي)</ion-text>
+                        <ion-text *ngIf="searchLang == 1">(ENG)</ion-text>
+                        <ion-text >{{+selectedItemSales29}}</ion-text>
+                      </ion-label> 
+                      <!-- popOverSearch  -->
+                      <ion-item class="custInput">
+                        <ion-input  #dstPop14 (click)="presentPopover($event)"   [(ngModel)] ="selectedItem.item_name"></ion-input>
+                        <!-- <ion-button fill="clear" (click)="clear('item_name')" slot="end">
+                          <ion-icon name="close" color="danger"></ion-icon>
+                        </ion-button> -->
+                      </ion-item>
+                      <ion-popover  #popover6 [isOpen]="isOpen" (didDismiss)="didDissmis()">
+                        <ng-template>
+                          <ion-header>
+                            <ion-toolbar dir="rtl">
+                              <ion-item>
+                                <ion-input #popInput5 [(ngModel)] ="searchTerm" (ionChange)="searchItem($event)"></ion-input>
+                                <ion-button fill="clear" (click)="clear()" slot="end">
+                                  <ion-icon name="close" color="danger"></ion-icon>
+                                </ion-button>
+                                <!-- <ion-input #popInput5 [(ngModel)] ="searchTerm" (ionChange)="searchItem($event)"></ion-input> -->
+                               </ion-item>
+                            </ion-toolbar>
+                          </ion-header>
+                          <ion-content class="ion-padding" dir="rtl"> 
+                            <!-- spinner -->
+                            <ion-list class="ion-text-center"  *ngIf="searchResult.length==0 && searchTerm =='' ">
+                              <ion-label>
+                                <ion-spinner name="lines-sharp"></ion-spinner>
+                              </ion-label> 
+                            </ion-list>
+                            
+                             <ion-list *ngIf="searchResult.length>0"> 
+                              <ion-item button *ngFor="let item of searchResult" (click)="selectFromPop(item)"    class="darko" [ngClass]="{'red':item.quantity == 0 , 'darko':item.quantity > 0}">
+                                {{item.item_name}} 
+                              </ion-item>
+                            </ion-list> 
+                          </ion-content>
+                        </ng-template>
+                      </ion-popover>
+                    </ion-col>
+                    
+                    
+                    <ion-col size="2"> 
+                      <ion-label class="ion-padding"><strong>الكمية في النظام</strong></ion-label>
+                      <ion-item class="custInput" >
+                        <ion-input  [readonly]="true"   [(ngModel)]="selectedItem.availQty"  (ionChange)="qtyRealhange($event)"  ></ion-input>
+                      </ion-item> 
+                    </ion-col>
+  
+                    <ion-col size="2"> 
+                      <ion-label class="ion-padding"><strong>الكمية الفعلية</strong></ion-label>
+                      <ion-item class="custInput" >
+                        <ion-input   #qtyId13  (keyup.enter)="addTolist()" (ionFocus)="isFocused($event)"  [(ngModel)]="selectedItem.qtyReal"  (ionChange)="qtyRealhange($event)" select-all ></ion-input>
+                      </ion-item> 
+                    </ion-col>
+  
+                    <ion-col size="2"> 
+                      <ion-label class="ion-padding"><strong> فرق الكمية </strong></ion-label>
+                      <ion-item class="custInput" >
+                        <ion-input [readonly]="true"    [value]="selectedItem.availQty - selectedItem.qtyReal"  ></ion-input>
+                      </ion-item> 
+                    </ion-col>
+  
+                    <ion-col size="2">
+                      <ion-label class="ion-padding"><strong>سعر الشراء</strong></ion-label>
+                      <ion-item class="custInput">
+                        <ion-input (keyup.enter)="addTolist()" [(ngModel)]="selectedItem.perch_price" (ionChange)="pricehange($event)"  ></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col size="2">
+                      <ion-label class="ion-padding"><strong>المجموع</strong></ion-label>
+                      <ion-item class="custInput">
+                        <ion-input [readonly]="true" [(ngModel)]="selectedItem.tot"></ion-input>
+                      </ion-item>
+                    </ion-col>
+                    <ion-col size="2" class="ion-padding"> 
+                      <ion-button expand="block" routerDirection="root" color="success"  (click)="addTolist()" >
+                        <ion-label class="ion-text-center"> +</ion-label>
+                      </ion-button> 
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-card>
+            </ion-col> 
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+            <ion-card>
+               <table class="table">
+                 <tr>
+                  <th>no</th>
+                  <th>الصنف</th>
+                  <th>الكمية في النظام</th>
+                  <th>الكميةالفعلية </th>
+                  <th>فرق الكمية</th> 
+                  <th>سعر الوحده</th>
+                  <th>المجموع</th> 
+                  <th></th> 
+                 </tr>
+                 <tr *ngFor="let item of itemList ; let i = index"  (dblclick)="qtyClick(i)">
+                  <td>{{+i}}</td>
+                  <td>{{item.item_name}}</td>
+                  
+                  <td>
+                     <ion-text >{{item.availQty}}</ion-text> 
+                  </td>
+  
+                  <td>
+                    <ion-text *ngIf="showMe != i">{{item.qtyReal}}</ion-text> 
+                    <!-- <ion-item *ngIf="showMe == i">
+                     <ion-input (keyup.enter)="editCell(i)" [(ngModel)] ="item.qtyReal" (ionBlur)="editCell(i)" ></ion-input>
+                    </ion-item> -->
+                  </td>
+  
+                 <td>
+                  <ion-text *ngIf="showMe != i">{{item.availQty - item.qtyReal}}</ion-text>  
+                 </td>
+  
+                  <td>
+                    <ion-text *ngIf="showMe != i">{{item.pay_price}}</ion-text> 
+                     <ion-item *ngIf="showMe == i">
+                      <ion-input (keyup.enter)="editCell(i)" [(ngModel)] ="item.perch_price" (ionBlur)="editCell(i)" ></ion-input>
+                     </ion-item>
+                  </td>
+  
+                  <td>{{item.tot}}</td>
+                  <td>
+                    <ion-button fill="clear" size="small" (click)="deleteItem(i)">
+                      <ion-icon name="trash" color="danger" ></ion-icon>
+                    </ion-button>
+                  </td>
+                 </tr>
+               </table> 
+            </ion-card>
+          </ion-col>
+          </ion-row> 
+        </ion-grid>
+      </ion-col> 
+      <ion-col size="10" class="ion-no-padding">
+        <ion-card>
+          <ion-grid>
+            <ion-row class="ion-justify-content-center">
+              <ion-col size="4">
+                <ion-label class="ion-padding"><strong>اجمالي المبلغ</strong></ion-label>
+                <ion-item class="custInput"> 
+                  <ion-input [(ngModel)]="payInvo.tot_pr" [readonly]="true" ></ion-input>
+                </ion-item>
+              </ion-col> 
+            </ion-row> 
+          </ion-grid> 
+        </ion-card>
+      </ion-col>
+  
+      <ion-col size="4" class="ion-no-padding">
+        <ion-card>
+          <ion-grid> 
+            <ion-row class="ion-justify-content-center">
+              <ion-col size="5" >
+                <ion-button expand="block" routerDirection="root" color="success"  (click)="update()" >
+                  <ion-label class="ion-text-center"> حفــظ</ion-label>
+                </ion-button>
+              </ion-col> 
+               <ion-col size="5" >
+                <ion-button expand="block" routerDirection="root" color="danger"  (click)="delete()" >
+                  <ion-label class="ion-text-center"> حــذف</ion-label>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid> 
+        </ion-card>
+      </ion-col>
+      
+    </ion-row>
+  
+  
+   
+  </ion-grid>
+  
+  </ion-content>
+  
+
+</ion-content>

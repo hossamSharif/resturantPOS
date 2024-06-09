@@ -1,0 +1,336 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title> القيود المحاسبية</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid *ngIf="user_info && store_info">
+    <ion-row dir="rtl">
+      <ion-col size="12">
+        <ion-card >
+          <ion-grid>
+            <ion-row>
+              <ion-col size="12">  
+                  <ion-grid> 
+                    <ion-row dir="rtl">
+                      <ion-col size="4" offset="4">
+                        <ion-label ><strong>نوع القيد المحاسبي :</strong></ion-label> 
+                        <ion-item class="custInput">
+                          <input  class="bnone" placeholder="اختر  نوع القيد " list="j_typeId" id="j_typeIds" [(ngModel)]="journal.j_type"  (change)="jTypeChange($event)">
+                          <datalist style="border: none;" id="j_typeId" style="height: auto;max-height: 20px;"  >
+                            <option *ngFor="let j of journalType ; let i = index"   [value]="j.type_name"></option>
+                          </datalist>
+                        </ion-item> 
+                      </ion-col>
+                      <ion-col size="4">
+                        <ion-label ><strong>التاريخ</strong></ion-label> 
+                        <ion-item class="custInput">
+                          <input style="width:100%"  type="date"  id="startingDate" name="startingDate" [(ngModel)]="journal.j_date"  />
+                          <!-- <ion-input type="date"  [(ngModel)]="payInvo.pay_date"  placeholder="التاريخ"></ion-input> -->
+                        </ion-item>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid> 
+              </ion-col>
+            </ion-row>
+           </ion-grid> 
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- ashkjdh -->
+  <ion-grid  *ngIf="user_info && store_info">
+   <ion-row class="ion-justify-content-center">
+     <ion-col size="6">
+
+      <ion-card>
+        <ion-list-header color="light"> 
+          <h4><ion-label class="ion-padding"><strong>من حساب : </strong></ion-label></h4>  
+        </ion-list-header>
+        <ion-grid> 
+          <ion-row class="ion-justify-content-center " >
+          
+            <ion-col size="6" offset="1" > 
+              <ion-item class="custInput">
+                <input  class="bnone" placeholder="اختر  الحساب " list="accountsfrom" id="accountfrom" [(ngModel)]="selectedFromAccount.sub_name"  (change)="pickAccountFrom($event ,1)">
+                <datalist style="border: none;" id="accountsfrom" style="height: auto;max-height: 20px;"  >
+                  <option *ngFor="let ac of sub_accountFrom ; let i = index"   [value]="ac.sub_name"></option>
+                </datalist>
+              </ion-item>  
+              <ion-label><strong> الرصيد : </strong>
+                <ion-text color="danger" *ngIf="selectedFromAccount.currentType == 'credit'">دائن  </ion-text  >
+                  <ion-text *ngIf="selectedFromAccount.currentType == 'credit'"><b>{{selectedFromAccount.credit}}</b></ion-text>
+                <ion-text color="success" *ngIf="selectedFromAccount.currentType == 'debit'">مدين </ion-text >
+                  <ion-text *ngIf="selectedFromAccount.currentType == 'debit'"><b>{{selectedFromAccount.debit}}</b></ion-text>
+              </ion-label> 
+            </ion-col>
+            <ion-col size="4" >
+              <ion-item class="custInput">
+               <ion-input  placeholder="ادخل المبلغ"  [(ngModel)]="jdetail_from.debit"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col  size="1" class="ion-padding-top"> </ion-col>
+            <!-- <ion-col size="4" class="ion-padding-top">
+              <ion-label class="ion-padding">
+                <strong> الرصيد الحالي : </strong>
+                <ion-text color="danger"  *ngIf="selectedFromAccount.currentType == 'credit'">دائن</ion-text>
+                <ion-text color="success" *ngIf="selectedFromAccount.currentType == 'debit'">مدين</ion-text> 
+              </ion-label>
+              <ion-item class="custInput">
+                <ion-label>
+                  <strong> {{selectedFromAccount.sub_balance}} </strong>
+                </ion-label>
+              </ion-item>
+            </ion-col> -->
+            
+          </ion-row>
+         
+          <ion-row *ngIf="showFrom == true" class="ion-justify-content-center" [ngClass]="{'coloredMsg': coloredMsgFrom === true , 'ion-justify-content-center' : coloredMsgFrom === false}">
+            <ion-col size="12" class="ion-text-center" *ngIf="coloredMsgFrom == true">
+              <ion-label><ion-text color="success">اختر حساب   العميل او المورد </ion-text></ion-label> 
+            </ion-col>
+            <ion-col size="6" offset="1" > 
+              <ion-item class="custInput">
+                <input  class="bnone" placeholder="اختر  الحساب " list="accountsfrom2" id="accountfrom2" [(ngModel)]="selectedFromAccount2.sub_name"  (change)="pickAccountFrom($event ,2)">
+                <datalist style="border: none;" id="accountsfrom2" style="height: auto;max-height: 20px;"  >
+                  <option *ngFor="let ac of sub_accountFrom ; let i = index"   [value]="ac.sub_name"></option>
+                </datalist>
+              </ion-item> 
+              <ion-label><strong> الرصيد : </strong>
+                <ion-text color="danger" *ngIf="selectedFromAccount2.currentType == 'credit'">دائن  </ion-text >
+                  <ion-text *ngIf="selectedFromAccount2.currentType == 'credit'"><b>{{selectedFromAccount2.credit}}</b></ion-text>
+                <ion-text color="success" *ngIf="selectedFromAccount2.currentType == 'debit'">مدين </ion-text >
+                  <ion-text *ngIf="selectedFromAccount2.currentType == 'debit'"><b>{{selectedFromAccount2.debit}}</b></ion-text>
+              </ion-label> 
+            </ion-col> 
+
+            <ion-col size="4" >
+              <ion-item class="custInput">
+               <ion-input  placeholder="ادخل المبلغ"  [(ngModel)]="jdetail_from2.debit"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col  size="1" class="ion-padding-top">
+              <ion-button *ngIf="showFrom3 == false"  size="small"  fill="clear"  (click)="deleteItem('from')" >
+                <ion-icon name="trash" color="danger" ></ion-icon>
+              </ion-button> 
+            </ion-col>
+             
+          </ion-row>
+
+
+          <!-- fghjk -->
+          <ion-row *ngIf="showFrom3 == true" class="ion-justify-content-center" [ngClass]="{'coloredMsg': coloredMsgFrom3 === true , 'ion-justify-content-center' : coloredMsgFrom3 === false}" >
+            <ion-col size="12" class="ion-text-center" *ngIf="coloredMsgFrom3 == true">
+              <ion-label><ion-text color="success">اختر حساب   العميل او المورد </ion-text></ion-label> 
+
+            </ion-col>
+            <ion-col size="6" offset="1" > 
+              <ion-item class="custInput">
+                <input  class="bnone" placeholder="اختر  الحساب " list="accountsfrom3" id="accountfrom3" [(ngModel)]="selectedFromAccount3.sub_name"  (change)="pickAccountFrom($event ,3)">
+                <datalist style="border: none;" id="accountsfrom3" style="height: auto;max-height: 20px;"  >
+                  <option *ngFor="let ac of sub_accountFrom ; let i = index"   [value]="ac.sub_name"></option>
+                </datalist>
+              </ion-item>  
+              <ion-label><strong> الرصيد : </strong>
+                <ion-text color="danger" *ngIf="selectedFromAccount3.currentType == 'credit'">دائن  </ion-text>
+                <ion-text *ngIf="selectedFromAccount3.currentType == 'credit'"><b>{{selectedFromAccount3.credit}}</b></ion-text>
+                <ion-text color="success" *ngIf="selectedFromAccount3.currentType == 'debit'">مدين </ion-text>
+                <ion-text *ngIf="selectedFromAccount3.currentType == 'debit'"><b>{{selectedFromAccount3.debit}}</b></ion-text>
+              </ion-label>  
+            </ion-col> 
+
+            <ion-col size="4" >
+              <ion-item class="custInput">
+               <ion-input  placeholder="ادخل المبلغ"  [(ngModel)]="jdetail_from3.debit"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col  size="1" class="ion-padding-top">
+              <ion-button  size="small"  fill="clear"  (click)="deleteItem3('from')" >
+                <ion-icon name="trash" color="danger" ></ion-icon>
+              </ion-button> 
+            </ion-col>
+            <!-- <ion-col size="4" class="ion-padding-top">
+              <ion-label class="ion-padding">
+                <strong> الرصيد الحالي : </strong>
+                <ion-text color="danger"  *ngIf="selectedFromAccount2.currentType == 'credit'">دائن</ion-text>
+                <ion-text color="success" *ngIf="selectedFromAccount2.currentType == 'debit'">مدين</ion-text> 
+              </ion-label>
+              <ion-item class="custInput">
+                <ion-label>
+                  <strong> {{selectedFromAccount2.sub_balance}} </strong>
+                </ion-label>
+              </ion-item>
+            </ion-col> -->
+          </ion-row>
+          <ion-item-divider></ion-item-divider>
+
+          <ion-item lines="none"  *ngIf="showFrom == false && showFrom3 == false ">
+            <ion-button slot="end" size="small"     color="success"  (click)="addTolist('from')" >
+              <ion-label class="ion-text-center">اضافة حساب +</ion-label>
+            </ion-button> 
+          </ion-item>
+          <ion-item lines="none"  *ngIf="showFrom3 == false && showFrom == true ">
+            <ion-button slot="end" size="small"     color="success"  (click)="addTolist3('from')" >
+              <ion-label class="ion-text-center">اضافة حساب +</ion-label>
+            </ion-button> 
+          </ion-item>
+        </ion-grid> 
+      </ion-card>
+     </ion-col>
+
+    <ion-col size="6">
+      <ion-card>
+        <ion-list-header color="light"> 
+          <h4><ion-label class="ion-padding"><strong>الي حساب :</strong></ion-label></h4>  
+        </ion-list-header>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6" offset="1"> 
+              <ion-item class="custInput">
+                <input class="bnone" placeholder="اختر  الحساب " list="accountsto" id="accountto"
+                  [(ngModel)]="selectedToAccount.sub_name" (change)="pickAccountTo($event ,1)">
+                 <datalist style="border: none;" id="accountsto" style="height: auto;max-height: 20px;">
+                  <option *ngFor="let ac of sub_accountTo ; let i = index" [value]="ac.sub_name"></option>
+                </datalist>
+              </ion-item>
+              <ion-label><strong> الرصيد : </strong>
+                <ion-text color="danger" *ngIf="selectedToAccount.currentType == 'credit'">دائن  </ion-text>
+                <ion-text *ngIf="selectedToAccount.currentType == 'credit'"><b>{{selectedToAccount.credit}}</b></ion-text>
+                <ion-text color="success" *ngIf="selectedToAccount.currentType == 'debit'">مدين </ion-text >
+                  <ion-text *ngIf="selectedToAccount.currentType == 'debit'"><b>{{selectedToAccount.debit}}</b></ion-text>
+              </ion-label>
+            </ion-col> 
+            <ion-col size="4" >
+              <ion-item class="custInput">
+               <ion-input  placeholder="ادخل المبلغ"  [(ngModel)]="jdetail_to.credit"></ion-input>
+              </ion-item>
+            </ion-col> 
+          </ion-row>
+
+          <ion-row *ngIf="showTo == true" class="ion-justify-content-center" [ngClass]="{'coloredMsg': coloredMsgTo == true , 'ion-justify-content-center' : coloredMsgTo == false}">
+            <ion-col size="12" class="ion-text-center" *ngIf="coloredMsgTo == true">
+              <ion-label><ion-text color="success">اختر حساب   العميل او المورد </ion-text></ion-label> 
+
+            </ion-col>
+            <ion-col size="6" offset="1">
+              <ion-item class="custInput">
+                <input class="bnone" placeholder="اختر  الحساب " list="accountsto2" id="accountto2"
+                  [(ngModel)]="selectedToAccount2.sub_name" (change)="pickAccountTo($event ,2)">
+                 <datalist style="border: none;" id="accountsto2" style="height: auto;max-height: 20px;">
+                  <option *ngFor="let ac of sub_accountTo ; let i = index" [value]="ac.sub_name"></option>
+                </datalist>
+              </ion-item>
+              <ion-label><strong> الرصيد  : </strong>
+                <ion-text color="danger" *ngIf="selectedToAccount2.currentType == 'credit'">دائن  </ion-text>
+                <ion-text *ngIf="selectedToAccount2.currentType == 'credit'"><b>{{selectedToAccount2.credit}}</b></ion-text>
+                <ion-text color="success" *ngIf="selectedToAccount2.currentType == 'debit'">مدين </ion-text>
+                <ion-text *ngIf="selectedToAccount2.currentType == 'debit'"><b>{{selectedToAccount2.debit}}</b></ion-text>
+              </ion-label>
+            </ion-col>
+             
+            <ion-col size="4" >
+              <ion-item class="custInput">
+               <ion-input  placeholder="ادخل المبلغ"  [(ngModel)]="jdetail_to2.credit"></ion-input>
+              </ion-item>
+            </ion-col> 
+            <ion-col  size="1" class="ion-padding-top">
+              <ion-button *ngIf="showTo3 == false" size="small"  fill="clear"  (click)="deleteItem('to')" >
+                <ion-icon name="trash" color="danger" ></ion-icon>
+              </ion-button> 
+            </ion-col>
+          </ion-row>
+          <!-- dfg -->
+          <ion-row *ngIf="showTo3 == true" class="ion-justify-content-center" [ngClass]="{'coloredMsg': coloredMsgTo3 == true , 'ion-justify-content-center' : coloredMsgTo3 == false}">
+            <ion-col size="12" class="ion-text-center" *ngIf="coloredMsgTo3 == true">
+              <ion-label><ion-text color="success">اختر حساب   العميل او المورد </ion-text></ion-label>
+            </ion-col>
+            <ion-col size="6" offset="1">
+              <ion-item class="custInput">
+                <input class="bnone" placeholder="اختر  الحساب " list="accountsto3" id="accountto3"
+                  [(ngModel)]="selectedToAccount3.sub_name" (change)="pickAccountTo($event ,3)">
+                 <datalist style="border: none;" id="accountsto3" style="height: auto;max-height: 20px;">
+                  <option *ngFor="let ac of sub_accountTo ; let i = index" [value]="ac.sub_name"></option>
+                </datalist>
+              </ion-item>
+              <ion-label><strong> الرصيد  : </strong>
+                <ion-text color="danger" *ngIf="selectedToAccount3.currentType == 'credit'">دائن  </ion-text>
+                <ion-text  *ngIf="selectedToAccount3.currentType == 'credit'"><b>{{selectedToAccount3.credit}}</b></ion-text>
+                <ion-text color="success" *ngIf="selectedToAccount3.currentType == 'debit'">مدين </ion-text>
+                <ion-text *ngIf="selectedToAccount3.currentType == 'debit'"><b>{{selectedToAccount3.debit}}</b></ion-text>
+              </ion-label>
+            </ion-col>
+           
+            <ion-col size="4" >
+              <ion-item class="custInput">
+               <ion-input  placeholder="ادخل المبلغ"  [(ngModel)]="jdetail_to3.credit"></ion-input>
+              </ion-item>
+            </ion-col> 
+            <ion-col  size="1" class="ion-padding-top">
+              <ion-button  size="small"  fill="clear"  (click)="deleteItem3('to')" >
+                <ion-icon name="trash" color="danger" ></ion-icon>
+              </ion-button> 
+            </ion-col>
+          </ion-row>
+
+          <ion-item-divider></ion-item-divider>
+          <ion-item lines="none" *ngIf="showTo == false && showTo3 == false">
+            <ion-button slot="end" size="small"     color="success"  (click)="addTolist('to')" >
+              <ion-label class="ion-text-center">اضافة حساب +</ion-label>
+            </ion-button> 
+          </ion-item>
+          <ion-item lines="none" *ngIf="showTo3 == false  &&  showTo == true">
+            <ion-button slot="end" size="small"     color="success"  (click)="addTolist3('to')" >
+              <ion-label class="ion-text-center">اضافة حساب +</ion-label>
+            </ion-button> 
+          </ion-item>
+
+        </ion-grid>
+      </ion-card>
+    
+    </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-grid>
+        <ion-row>
+         <ion-col size="12">
+           <ion-card>
+            <ion-item > 
+              <h4><ion-label class="ion-padding"><strong> البيان</strong></ion-label></h4> 
+              <ion-button slot="end" fill="clear" color="success" (click)="presentModalSales('sales','ود المحجوب')">
+                <ion-icon name="link-outline"></ion-icon>
+                ربط القيد بفاتورة
+              </ion-button> 
+            </ion-item>
+              <ion-item class="custInput">
+                <ion-input [(ngModel)]="journal.j_details"></ion-input>
+              </ion-item>
+           </ion-card> 
+         </ion-col>
+        </ion-row>
+      </ion-grid>
+      
+      <!-- <ion-col size="6" offset="6">
+        <ion-label class="ion-padding"><strong>المبلغ</strong></ion-label>
+        <ion-item class="custInput">
+          <ion-input [(ngModel)]="payInvo.rec_pay" (ionChange)="payChange($event)"></ion-input>
+        </ion-item>
+      </ion-col> -->
+    </ion-row>
+   
+   <ion-row class="ion-justify-content-center">
+    <ion-col size="4" >
+      <ion-button expand="block" routerDirection="root" color="success"  (click)="save()" >
+        <ion-label class="ion-text-center"> حفــظ</ion-label>
+      </ion-button>
+    </ion-col>
+   </ion-row> 
+ 
+   
+  </ion-grid>
+</ion-content>

@@ -1,0 +1,44 @@
+.custInput{
+    border-style: solid;
+    border-color: var(--ion-color-light);
+    border-radius: 5px;
+    }
+    .cust-card{
+        border-radius: 5px;
+    }
+    .show{ visibility: visible; }
+
+    .hide{visibility: hidden;}
+    .custRow{
+        margin-top: 5rem;
+        }
+.bnone{
+  border: none;
+}
+
+ .red{
+  color:var(--ion-color-danger) 
+ }
+ .darko{
+  color: var(--ion-color-dark)
+ }
+ion-popover{
+  --offset-y : -30px
+}
+.custInp{
+  border-right-style: solid;
+    border-right-width: 0.5px;
+    text-align: center;
+}
+ 
+  .table{
+       text-align: center;
+    width: 100%;
+    margin: 12px;
+  }
+
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+  td, th {border: 1px solid #dddddd;text-align: center;padding: 8px; font-size: 16px;font-weight: bold;color: black;}
+       

@@ -1,0 +1,141 @@
+<ion-header>
+  <ion-toolbar> 
+    <ion-title > تعديل فاتورة مبيعات</ion-title> 
+    <ion-buttons  slot="end"> 
+      
+    <ion-button fill="clear" (click)="back()">
+      <ion-icon name="arrow-back-sharp"></ion-icon>
+    </ion-button> 
+    </ion-buttons> 
+  
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- skeleton -->
+ 
+  <ion-grid  *ngIf="payInvo" >
+    <ion-row dir="rtl">
+      <ion-col size="12">
+        <ion-card  class="ion-no-padding ion-no-margin">
+          <ion-grid class="ion-no-padding ion-no-margin">
+            <ion-row dir="rtl">
+              <ion-col size="4" offset="5"> 
+              <ion-radio-group [(ngModel)]="radioVal"  > 
+                  <ion-grid class="ion-no-padding ion-no-margin">
+                  <ion-row>
+                    <ion-col class="ion-no-padding ion-no-margin">
+                      <ion-item lines="none" >
+                        <ion-radio [value]="0" class="ion-margin-end"></ion-radio>
+                        <ion-label>قائمة الحسابات </ion-label> 
+                      </ion-item>
+                    </ion-col>
+                    <ion-col class="ion-no-padding ion-no-margin">
+                      <ion-item lines="none" >
+                        <ion-radio [value]="1" class="ion-margin-end"></ion-radio>
+                        <ion-label>حساب جديد</ion-label> 
+                      </ion-item>
+                    </ion-col> 
+                  </ion-row>
+                </ion-grid>  
+              </ion-radio-group>
+               </ion-col>
+               <ion-col size="3" class="ion-text-end">
+                <ion-item lines="none">
+                  <input style="width:100%"  type="date"  id="startingDate" name="startingDate" [(ngModel)]="payInvo.pay_date"  />
+                  <!-- <ion-input type="date"  [(ngModel)]="payInvo.pay_date"  placeholder="التاريخ"></ion-input> -->
+                </ion-item>
+              </ion-col>
+            </ion-row>
+  
+  
+            <ion-row>
+              <ion-col size="4" offset="4"  *ngIf="radioVal == 0 "> 
+                <ion-item class="custInput" >
+                  <input  class="bnone" placeholder="اختر  حساب العميل" list="accounts" id="account" [(ngModel)]="selectedAccount.sub_name"  (change)="pickAccount($event)">
+                  <datalist *ngIf="sub_account" style="border: none;" id="accounts" style="height: auto;max-height: 20px;">
+                    <option *ngFor="let ac of sub_account ; let i = index"   [value]="ac.sub_name"></option>
+                  </datalist>
+                  <ion-label *ngIf="!sub_account">
+                    <ion-text color="danger" >خطأ في التحميل </ion-text>
+                   </ion-label>
+                  <ion-button  *ngIf="!sub_account" fill="clear" size="small" slot="end" (click)="refresh('account')">
+                    <ion-icon name="refresh" color="success"></ion-icon>
+                  </ion-button>  
+                </ion-item>   
+              </ion-col>
+              <ion-col size="4" offset="4"  *ngIf="radioVal == 1"> 
+                <ion-item class="custInput"> 
+                 <ion-input [(ngModel)]="sub_nameNew" ></ion-input>
+                </ion-item>   
+              </ion-col>
+              <ion-col size="4" class="ion-text-start">
+                <ion-item class="custInput"> 
+                  <ion-input placeholder="أكتب تعليقا" [(ngModel)]="payInvo.payComment"></ion-input>
+                 </ion-item>   
+              </ion-col>
+            </ion-row>
+           </ion-grid> 
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  
+  <ion-grid class="ion-margin-top" *ngIf="payInvo" >
+    <ion-row dir="rtl"> 
+      <ion-col size="9" class="ion-no-padding">
+        <ion-card>
+          <ion-grid>
+            <ion-row class="ion-justify-content-center">
+              <ion-col size="9">
+                <ion-label class="ion-padding"><strong>اجمالي المبلغ</strong></ion-label>
+                <ion-item class="custInput"> 
+                  <ion-input [(ngModel)]="payInvo.tot_pr"></ion-input>
+                </ion-item>
+              </ion-col>
+              <!-- <ion-col size="9">
+                <ion-label class="ion-padding">
+                  <strong>الخصم %</strong> 
+                </ion-label>
+  
+                <ion-label class="ion-padding ion-margin-start">
+                  <strong>الخصم</strong> 
+                </ion-label> 
+                <ion-item class="custInput"> 
+                  <ion-input  [(ngModel)]="discountPerc" (ionChange)="discountPerChange($event)"></ion-input>
+                  <ion-input  class="custInp" [(ngModel)]="payInvo.discount"  tabindex="600"  (ionBlur)="discountChange($event)"></ion-input> 
+                </ion-item>
+              </ion-col> -->
+              <ion-col size="9">
+                <ion-label class="ion-padding"><strong> المدفوع نقدا</strong></ion-label>
+                <ion-item class="custInput"> 
+                  <ion-input [(ngModel)]="payInvo.pay" (ionChange)="payChange($event)"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="9">
+                <ion-label class="ion-padding"><strong>المتبقي</strong></ion-label>
+                <ion-item class="custInput"> 
+                  <ion-input  [(ngModel)]="payInvo.changee" [readonly]="true"></ion-input>
+                </ion-item>
+              </ion-col>
+             
+            </ion-row>
+            <ion-row class="ion-justify-content-center">
+              <ion-col size="5" >
+                <ion-button expand="block" routerDirection="root"  color="success"  (click)="update()" >
+                  <ion-label class="ion-text-center"> حفــظ</ion-label>
+                </ion-button>
+              </ion-col>
+              <ion-col size="5" >
+                <ion-button expand="block" routerDirection="root" color="danger"  (click)="delete()" >
+                  <ion-label class="ion-text-center"> حــذف</ion-label>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid> 
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

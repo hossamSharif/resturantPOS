@@ -1,0 +1,27 @@
+
+ .custInput{
+    border-style: solid;
+    border-color: var(--ion-color-light);
+    border-radius: 5px;
+    }
+    .bgP{
+      --background:    var(--ion-color-success); 
+    }
+
+    .coloredMsg{
+    border-style: solid;
+    border-width: 1.5px; 
+    box-shadow:10px 10px 5px 5px darkorange;
+    border-color:var(--ion-color-warning); 
+    }
+  .table{
+      text-align: center;
+   width: 100%;
+   margin: 12px;
+ }
+
+ tr:nth-child(even) {
+   background-color: #dddddd;
+ }
+ 
+ td, th {border: 1px solid #dddddd;text-align: center;padding: 8px; font-size: 16px;font-weight: bold;color: black;}

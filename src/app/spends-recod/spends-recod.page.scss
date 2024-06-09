@@ -1,0 +1,29 @@
+.custInput{
+    border-style: solid;
+    border-color: var(--ion-color-light);
+    border-radius: 5px;
+    }
+
+    .show{ visibility: visible; }
+
+  .hide{visibility: hidden;}
+  
+    .cust-card{
+        border-radius: 5px;
+    }
+.mgR{
+  margin-right: 60px;
+}
+.h15{
+  height: 15px
+}
+    .custRow{
+        margin-top: 5rem;
+        }
+
+  .table{text-align: center;width: 100%; margin: 12px;}
+  .tabl2{text-align: right;width: 100%; margin: 12px;}
+
+  .tr2 {background-color:none;}
+  // tr:nth-child(even) {background-color: #dddddd;}
+  td, th {border: 1px solid #dddddd;text-align: center;padding: 8px; font-size: 16px;font-weight: bold;color: black;}

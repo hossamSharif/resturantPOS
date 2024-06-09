@@ -1,0 +1,925 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="end" class="poRel" (click)="presentPopover($event)">
+      <div class="poRel">
+        <div class="posAb noti">
+         <ion-label>
+           <ion-text *ngIf="showNotif == true && notifArr.length> 0">{{notifArr.length}}</ion-text> 
+         </ion-label> 
+       </div>
+       <div (click)="presentPopover($event)">
+         <ion-icon name="notifications-outline"  class="dark"  [ngClass]="{'warn':showNotif == true && notifArr.length> 0 , 'dark': showNotif == false }"></ion-icon> 
+       </div>
+     </div> 
+     <ion-button fill="clear" (click)="presentPopover($event)">
+      <ion-label><ion-text color="dark" >الإشعارات</ion-text></ion-label>  
+     </ion-button>
+    </ion-buttons>  
+    <ion-title>الأصنــاف</ion-title>
+  </ion-toolbar>
+  <ion-popover  #popoverNotif33 [isOpen]="isOpenNotif" (didDismiss)="didDissmis()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar dir="rtl" class="ion-text-center">
+          الإشعارات
+        </ion-toolbar>
+      </ion-header>
+      <ion-content  dir="rtl">  
+        <ion-list class="ion-text-center"  *ngIf="LogHistoryLocalArr.length>0">
+         <ion-item *ngFor="let log of LogHistoryLocalArr" >
+         <ion-grid >
+           <ion-row>
+             <ion-col size="9"> 
+                 {{log.desc}}    
+             </ion-col>
+             <ion-col size="3">
+               <ion-text color = "primary">{{log.datee | dateAgo}}</ion-text>
+             </ion-col>
+           </ion-row>
+         </ion-grid>
+       </ion-item> 
+        </ion-list> 
+      </ion-content>
+    </ng-template>
+  </ion-popover>
+</ion-header>
+
+<ion-content class="custContent">
+  <ion-grid>
+    <ion-row dir="rtl">
+      <ion-col size="12">
+        <ion-card class="ion-no-margin">
+          <ion-grid>
+            <ion-row>
+              <ion-col size="5"> 
+                <ion-item lines="none" >
+                  <!-- <input placeholder="اختر  حساب العميل" list="accounts" id="account" [(ngModel)]="selectedAccount.sub_name"  (change)="pickAccount($event)">
+                 
+                  <datalist style="border: none;" id="accounts" style="height: auto;max-height: 20px;">
+                    <option *ngFor="let ac of sub_account ; let i = index"   [value]="ac.sub_name"></option>
+                </datalist> -->
+                <!-- <ion-input [(ngModel)]="searchTerm" placeholder="بحــث"></ion-input> -->
+                <ion-searchbar  [(ngModel)]="searchTerm" showCancelButton="never" placeholder="بحــث" ></ion-searchbar>
+                </ion-item>  
+  
+              </ion-col>
+              <ion-col size="7" >
+                <ion-item lines="none">
+                  <ion-buttons slot="end">
+                    <ion-button  fill="outline" color="success" shape="round"  (click)="presentModal('null', 'settings')"  > 
+                      <ion-icon name="settings-outline" color="success"></ion-icon>
+                     <ion-label><ion-text color="dark"> إخفاء الأعمدة</ion-text></ion-label> 
+                    </ion-button>
+                    <ion-button  fill="outline" color="success" shape="round"   (click)="presentModal('null', 'price')"  > 
+                      <ion-icon name="create-outline" color="success"></ion-icon>
+                      <ion-label><ion-text color="dark">تعديل الأسعار</ion-text></ion-label> 
+                    </ion-button>
+                    <ion-button  fill="outline" color="success" shape="round"  (click)="presentModal('null', 'save')"  > 
+                      <ion-icon name="add-circle-outline" color="success"></ion-icon>
+                     <ion-label><ion-text color="dark">صنف جديد</ion-text></ion-label> 
+                    </ion-button>
+                    <ion-button  fill="outline" color="success"  shape="round"  (click)="exportexcel()"  > 
+                     
+                      <ion-icon name="document-outline" color="success"></ion-icon>
+                     <ion-label class="ion-margin-start ion-margin-end"><ion-text color="dark"> تصدير XLS </ion-text></ion-label> 
+                    </ion-button>
+                    <ion-button  fill="outline" color="success"  shape="round"  (click)="openPDF()"  > 
+                     
+                      <ion-icon name="document-outline" color="success"></ion-icon>
+                     <ion-label class="ion-margin-start ion-margin-end"><ion-text color="dark"> تصدير PDF </ion-text></ion-label> 
+                    </ion-button>
+                  </ion-buttons>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+           </ion-grid> 
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid>
+    <ion-row dir="rtl">
+      <ion-col size="6" class="ion-text-center">
+        <!-- <ion-label>
+          <strong>اسم الفرع :</strong> {{store_info.store_name}}
+          </ion-label> -->
+      </ion-col>
+      <ion-col size="6" class="ion-text-center">
+        <ion-label *ngIf = "filterMode == true"> 
+          <strong >قيمة المخزون :</strong> {{store_fltTot.toFixed(2)}} 
+          </ion-label>
+          <ion-label *ngIf = "filterMode == false">
+            <strong >قيمة المخزون :</strong> {{store_tot.toFixed(2)}}
+          </ion-label> 
+      </ion-col>
+    </ion-row>
+    <ion-row dir="rtl"> 
+      <ion-col size="5" >
+        <ion-item lines="none">
+          <ion-buttons >
+            <ion-button  fill="outline" color="success"  shape="round"  (click)="presentModal('null', 'filter')"  > 
+              <ion-icon name="filter-outline" color="success"></ion-icon>
+             <ion-label class="ion-margin-start ion-margin-end"><ion-text color="dark"> فلتر </ion-text></ion-label> 
+            </ion-button>
+             <ion-button *ngIf="showBrand == true"  fill="outline" color="medium" shape="round"   (click)="removeFilter('brand')"  > 
+              <ion-label><ion-text color="dark">  الماركة (brand) </ion-text></ion-label> 
+              <ion-icon name="close" color="medium"></ion-icon> 
+            </ion-button> 
+            <ion-label class="ion-margin-right"><strong>:</strong></ion-label>
+            <ion-button *ngIf="showMdel == true" fill="outline" color="medium" shape="round"   (click)="removeFilter('model')"  > 
+              
+              <ion-label><ion-text color="dark"> الموديل (model)  </ion-text></ion-label>
+              <ion-icon name="close" color="medium"></ion-icon> 
+            </ion-button> 
+          </ion-buttons>
+        </ion-item>
+      </ion-col>
+      <ion-col size="7" >
+        <ion-buttons >
+         
+        </ion-buttons>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+<!-- 
+  <ion-grid *ngIf="items">
+    <ion-row> 
+      <ion-col size="2" class="ion-no-padding ion-padding-top">
+        <ion-label>
+          <strong>تصفية النتائج :</strong>
+        </ion-label>
+      </ion-col>
+      <ion-col size="6" > 
+        <ion-badge (click)="prepareFilters()" class="ion-padding" >
+          <ion-label class="ion-margin-end">All</ion-label>
+        </ion-badge>
+        <ion-select   multiple="true" cancelText="cancel" okText="ok">
+          <ion-select-option *ngFor="let b of brandList" value="b.brand">
+            {{b.brand}}
+          </ion-select-option>
+        </ion-select>
+        <ion-badge (click)="filter('all')" class="ion-padding" [ngClass]="{'selected': selectedIdx == 'all' , 'noneSelected': selectedIdx !='all' }">
+          <ion-label class="ion-margin-end">All</ion-label>
+        </ion-badge>
+        <ion-badge *ngFor="let st of stores ; let i = index" class="ion-padding" (click)="filter(i)" [ngClass]="{'selected':+selectedIdx == +st.id  , 'noneSelected': +selectedIdx != +st.id  }" >
+          <ion-label>{{st.store_name}}</ion-label>
+        </ion-badge>
+      </ion-col>
+       
+    </ion-row>
+  </ion-grid> -->
+
+  <ion-grid>
+    <ion-row dir="rtl" >
+      <ion-col size="12" class="ion-no-padding custCol">
+        <ion-grid>
+          <!-- <ion-row>
+            <ion-col size="12">
+              <ion-card>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="4"> 
+                     <ion-label  class="ion-padding"><strong>الصنف</strong></ion-label> 
+                        <ion-item class="custInput">
+                          <input  list="browsers" id="browser" [(ngModel)]="selectedItem.item_name"  (change)="pickDetail($event)">
+                         
+                          <datalist style="border: none;" id="browsers" style="height: auto;max-height: 20px;">
+                            <option *ngFor="let item of items ; let i = index"   [value]="item.item_name"></option>
+                        </datalist>
+                        </ion-item>  
+                    </ion-col>
+                    <ion-col size="2"> 
+                      <ion-label class="ion-padding"><strong>الكمية</strong></ion-label>
+                      <ion-item class="custInput">
+                        <ion-input  [(ngModel)]="selectedItem.qty"  (ionChange)="qtyhange($event)" #qtyId  ></ion-input>
+                      </ion-item> 
+                    </ion-col>
+                    <ion-col size="2">
+                      <ion-label class="ion-padding"><strong>سعر الوحده</strong></ion-label>
+                      <ion-item class="custInput">
+                        <ion-input [(ngModel)]="selectedItem.pay_price"></ion-input>
+                      </ion-item>
+                    </ion-col>
+                    <ion-col size="2">
+                      <ion-label class="ion-padding"><strong>المجموع</strong></ion-label>
+                      <ion-item class="custInput">
+                        <ion-input [(ngModel)]="selectedItem.tot"></ion-input>
+                      </ion-item>
+                    </ion-col>
+                    <ion-col size="2" class="ion-padding"> 
+                      <ion-button expand="block" routerDirection="root" color="success"  (click)="addTolist()" >
+                        <ion-label class="ion-text-center"> +</ion-label>
+                      </ion-button> 
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-card>
+            </ion-col>
+          </ion-row> -->
+          <ion-row>
+            <ion-col size="12" >
+               <table  class="table"  *ngIf="searchMode == false && filterMode == false" >
+                 <tr *ngIf="colSetting">
+                  <th> 
+                    التسلسل
+                    <ion-button class="ion-no-margin ion-no-padding" color="success" fill="clear" size="small" (click)="sorting('id', sortStatus[0].type,'items')">
+                    
+                      <ion-icon *ngIf="sortStatus[0].type == 'asc' || sortStatus[0].type == null" name="chevron-down-outline"></ion-icon>
+                      <ion-icon *ngIf="sortStatus[0].type == 'desc'" name="chevron-up-outline"></ion-icon>
+                    </ion-button>
+                  </th>
+                  <th  [ngClass]="{'hideMe': colSetting.item_name == false , 'showMe': colSetting.item_name == true }">
+                    الصنف
+                    <ion-button class="ion-no-margin ion-no-padding" color="success" fill="clear" size="small" (click)="sorting('item_name', sortStatus[1].type,'items')">
+                    
+                      <ion-icon *ngIf="sortStatus[1].type == 'asc' || sortStatus[1].type == null" name="chevron-down-outline"></ion-icon>
+                      <ion-icon *ngIf="sortStatus[1].type == 'desc'" name="chevron-up-outline"></ion-icon>
+                    </ion-button>
+                  </th>
+                  <th  [ngClass]="{'hideMe': colSetting.item_desc== false , 'showMe': colSetting.item_desc== true }">اسم الصنف  (English)
+                    <ion-button class="ion-no-margin ion-no-padding" color="success" fill="clear" size="small" (click)="sorting('item_desc', sortStatus[0].type,'items')">
+                    
+                      <ion-icon *ngIf="sortStatus[2].type == 'asc' || sortStatus[2].type == null" name="chevron-down-outline"></ion-icon>
+                      <ion-icon *ngIf="sortStatus[2].type == 'desc'" name="chevron-up-outline"></ion-icon>
+                    </ion-button>
+                  </th> 
+                  <th  [ngClass]="{'hideMe': colSetting.aliasEn== false , 'showMe': colSetting.aliasEn== true }">اسم  مستعار  (Alias)
+                    <ion-button class="ion-no-margin ion-no-padding" color="success" fill="clear" size="small" (click)="sorting('aliasEn', sortStatus[0].type,'items')">
+                    
+                      <ion-icon *ngIf="sortStatus[2].type == 'asc' || sortStatus[2].type == null" name="chevron-down-outline"></ion-icon>
+                      <ion-icon *ngIf="sortStatus[2].type == 'desc'" name="chevron-up-outline"></ion-icon>
+                    </ion-button>
+                  </th>
+                  <th  [ngClass]="{'hideMe': colSetting.model == false , 'showMe': colSetting.model == true }">الموديل (model)
+                    <ion-button class="ion-no-margin ion-no-padding" color="success" fill="clear" size="small" (click)="sorting('model', sortStatus[3].type,'items')">
+                    
+                      <ion-icon *ngIf="sortStatus[3].type == 'asc' || sortStatus[3].type == null" name="chevron-down-outline"></ion-icon>
+                      <ion-icon *ngIf="sortStatus[3].type == 'desc'" name="chevron-up-outline"></ion-icon>
+                    </ion-button>
+                  </th>
+                 
+                  <th  [ngClass]="{'hideMe': colSetting.part_no == false , 'showMe': colSetting.part_no == true }">الكود (part no)
+                    <ion-button class="ion-no-margin ion-no-padding" color="success" fill="clear" size="small" (click)="sorting('part_no', sortStatus[4].type,'items')">
+                    
+                      <ion-icon *ngIf="sortStatus[4].type == 'asc' || sortStatus[4].type == null" name="chevron-down-outline"></ion-icon>
+                      <ion-icon *ngIf="sortStatus[4].type == 'desc'" name="chevron-up-outline"></ion-icon>
+                    </ion-button>
+                  </th>
+                  <th  [ngClass]="{'hideMe': colSetting.brand == false , 'showMe': colSetting.brand == true }">الماركة (brand) 
+                    <ion-button class="ion-no-margin ion-no-padding" color="success" fill="clear" size="small" (click)="sorting('brand', sortStatus[5].type,'items')">
+                    
+                      <ion-icon *ngIf="sortStatus[5].type == 'asc' || sortStatus[5].type == null" name="chevron-down-outline"></ion-icon>
+                      <ion-icon *ngIf="sortStatus[5].type == 'desc'" name="chevron-up-outline"></ion-icon>
+                    </ion-button>
+                  </th> 
+                  <th  [ngClass]="{'hideMe': colSetting.min_qty == false , 'showMe': colSetting.min_qty == true }">اقل كمية (MSQ)
+                    <ion-button class="ion-no-margin ion-no-padding" color="success" fill="clear" size="small" (click)="sorting('min_qty', sortStatus[6].type,'items')">
+                    
+                      <ion-icon *ngIf="sortStatus[6].type == 'asc' || sortStatus[6].type == null" name="chevron-down-outline"></ion-icon>
+                      <ion-icon *ngIf="sortStatus[6].type == 'desc'" name="chevron-up-outline"></ion-icon>
+                    </ion-button>
+                  </th>
+                  <th  [ngClass]="{'hideMe': colSetting.item_unit== false , 'showMe': colSetting.item_unit== true }">الوحده (unit)
+                    <ion-button class="ion-no-margin ion-no-padding" color="success" fill="clear" size="small" (click)="sorting('item_unit', sortStatus[7].type,'items')">
+                    
+                      <ion-icon *ngIf="sortStatus[7].type == 'asc' || sortStatus[7].type == null" name="chevron-down-outline"></ion-icon>
+                      <ion-icon *ngIf="sortStatus[7].type == 'desc'" name="chevron-up-outline"></ion-icon>
+                    </ion-button>
+                  </th> 
+                  <th  [ngClass]="{'hideMe': colSetting.perch_price == false , 'showMe': colSetting.perch_price == true }">سعر الشراء (purch price)
+                    <ion-button class="ion-no-margin ion-no-padding" color="success" fill="clear" size="small" (click)="sorting('perch_price', sortStatus[8].type,'items')">
+                      <ion-icon *ngIf="sortStatus[8].type == 'asc' || sortStatus[8].type == null" name="chevron-down-outline"></ion-icon>
+                      <ion-icon *ngIf="sortStatus[8].type == 'desc'" name="chevron-up-outline"></ion-icon>
+                    </ion-button>
+                  </th>
+                  <th  [ngClass]="{'hideMe': colSetting.pay_price == false , 'showMe': colSetting.pay_price == true }">سعر الوحده (selling price)
+                    <ion-button class="ion-no-margin ion-no-padding" color="success" fill="clear" size="small" (click)="sorting('pay_price', sortStatus[9].type,'items')">
+                    
+                      <ion-icon *ngIf="sortStatus[9].type == 'asc' || sortStatus[9].type == null" name="chevron-down-outline"></ion-icon>
+                      <ion-icon *ngIf="sortStatus[9].type == 'desc'" name="chevron-up-outline"></ion-icon>
+                    </ion-button>
+                  </th> 
+                  <th  [ngClass]="{'hideMe': colSetting.profit == false , 'showMe': colSetting.profit == true }">نسبة الفائدة (profit perc)
+                    <ion-button class="ion-no-margin ion-no-padding" color="success" fill="clear" size="small" (click)="sorting('profit', sortStatus[10].type,'items')">
+                    
+                      <ion-icon *ngIf="sortStatus[10].type == 'asc' || sortStatus[10].type == null" name="chevron-down-outline"></ion-icon>
+                      <ion-icon *ngIf="sortStatus[10].type == 'desc'" name="chevron-up-outline"></ion-icon>
+                    </ion-button>
+                  </th>  
+                  <th  [ngClass]="{'hideMe': colSetting.instock == false , 'showMe': colSetting.instock == true }">المخزون (in stock)
+                    <ion-button class="ion-no-margin ion-no-padding" color="success" fill="clear" size="small" (click)="sorting('quantity', sortStatus[11].type,'items')">
+                    
+                      <ion-icon *ngIf="sortStatus[11].type == 'asc' || sortStatus[11].type == null" name="chevron-down-outline"></ion-icon>
+                      <ion-icon *ngIf="sortStatus[11].type == 'desc'" name="chevron-up-outline"></ion-icon>
+                    </ion-button>
+                  </th>
+                  <th  [ngClass]="{'hideMe': colSetting.total == false , 'showMe': colSetting.total == true }">المجموع
+                    <ion-button class="ion-no-margin ion-no-padding" color="success" fill="clear" size="small" (click)="sorting('total', sortStatus[12].type,'items')">
+                    
+                      <ion-icon *ngIf="sortStatus[12].type == 'asc' || sortStatus[12].type == null" name="chevron-down-outline"></ion-icon>
+                      <ion-icon *ngIf="sortStatus[12].type == 'desc'" name="chevron-up-outline"></ion-icon>
+                    </ion-button>
+                  </th>
+                  <th  [ngClass]="{'hideMe': colSetting.lastSold == false , 'showMe': colSetting.lastSold == true }">اخر عملية بيع
+                    <ion-button class="ion-no-margin ion-no-padding" color="success" fill="clear" size="small" (click)="sorting('lastSold', sortStatus[13].type,'items')">
+                    
+                      <ion-icon *ngIf="sortStatus[13].type == 'asc' || sortStatus[13].type == null" name="chevron-down-outline"></ion-icon>
+                      <ion-icon *ngIf="sortStatus[13].type == 'desc'" name="chevron-up-outline"></ion-icon>
+                    </ion-button>
+                  </th>
+                  <!-- <th>sales28</th>
+                  <th>sales29</th>
+                  <th>purch28</th>
+                  <th>purch29</th>-->
+                  <th>firstQ</th> 
+                  <th  [ngClass]="{'hideMe': colSetting.edit == false , 'showMe': colSetting.edit == true }"><strong>تعديل</strong>  </th> 
+                  <th  [ngClass]="{'hideMe': colSetting.delete == false , 'showMe': colSetting.delete == true }"><strong>حذف</strong>  </th> 
+                 </tr>
+                 <tr *ngFor="let item of items | filter : searchTerm ; let i = index"   (dblclick)="prClick(i , item)">
+                  <!-- <td>{{i+1}}</td> -->
+                  <td>{{item.id}}</td>
+                  <td  [ngClass]="{'hideMe': colSetting.item_name == false , 'showMe': colSetting.item_name == true }">
+                    <ion-text *ngIf="showMe != i">{{item.item_name}}</ion-text>
+                    <ion-item *ngIf="showMe == i">
+                      <ion-input (keyup.enter)="editCell(i ,item)" [(ngModel)] ="this.selectedItem2.item_name"  ></ion-input>
+                     </ion-item>
+                  </td> 
+                  <td  [ngClass]="{'hideMe': colSetting.item_desc == false , 'showMe': colSetting.item_desc == true }">
+                    <ion-text *ngIf="showMe != i">{{item.item_desc}}</ion-text>
+                    <ion-item *ngIf="showMe == i">
+                      <ion-input (keyup.enter)="editCell(i ,item)" [(ngModel)] ="this.selectedItem2.item_desc"  ></ion-input>
+                     </ion-item>
+                  </td>
+                  <td  [ngClass]="{'hideMe': colSetting.aliasEn == false , 'showMe': colSetting.aliasEn == true }">
+                    <ion-text *ngIf="showMe != i">{{item.aliasEn}}</ion-text>
+                    <ion-item *ngIf="showMe == i">
+                      <ion-input (keyup.enter)="editCell(i ,item)" [(ngModel)] ="this.selectedItem2.aliasEn"  ></ion-input>
+                     </ion-item>
+                  </td>
+                  <td  [ngClass]="{'hideMe': colSetting.model == false , 'showMe': colSetting.model == true }">
+                    <ion-text *ngIf="showMe != i">{{item.model}}</ion-text>
+                    <ion-item *ngIf="showMe == i">
+                      <ion-input (keyup.enter)="editCell(i ,item)" [(ngModel)] ="this.selectedItem2.model"  ></ion-input>
+                     </ion-item>
+                  </td>
+                  <td  [ngClass]="{'hideMe': colSetting.part_no == false , 'showMe': colSetting.part_no == true }">
+                    <ion-text *ngIf="showMe != i">{{item.part_no}}</ion-text>
+                    <ion-item *ngIf="showMe == i">
+                      <ion-input (keyup.enter)="editCell(i ,item)" [(ngModel)] ="this.selectedItem2.part_no"  ></ion-input>
+                     </ion-item>
+                  </td>
+                  <td  [ngClass]="{'hideMe': colSetting.brand == false , 'showMe': colSetting.brand == true }">
+                    <ion-text *ngIf="showMe != i">{{item.brand}}</ion-text>
+                    <ion-item *ngIf="showMe == i">
+                      <ion-input (keyup.enter)="editCell(i ,item)" [(ngModel)] ="this.selectedItem2.brand"  ></ion-input>
+                     </ion-item>
+                  </td> 
+                  <td  [ngClass]="{'hideMe': colSetting.min_qty == false , 'showMe': colSetting.min_qty == true }">
+                    <ion-text *ngIf="showMe != i">{{item.min_qty}}</ion-text>
+                    <ion-item *ngIf="showMe == i">
+                      <ion-input (keyup.enter)="editCell(i ,item)" [(ngModel)] ="this.selectedItem2.min_qty"  ></ion-input>
+                     </ion-item>
+                  </td>
+                  <td  [ngClass]="{'hideMe': colSetting.item_unit == false , 'showMe': colSetting.item_unit == true }">
+                    <ion-text *ngIf="showMe != i">{{item.item_unit}}</ion-text>
+                    <ion-item *ngIf="showMe == i">
+                      <ion-input (keyup.enter)="editCell(i ,item)" [(ngModel)] ="this.selectedItem2.item_unit"  ></ion-input>
+                     </ion-item> 
+                  </td> 
+                  <td  [ngClass]="{'hideMe': colSetting.perch_price == false , 'showMe': colSetting.perch_price == true }">
+                    <ion-text *ngIf="showMe != i">{{item.perch_price}}</ion-text>
+                    <ion-item *ngIf="showMe == i">
+                      <ion-input (keyup.enter)="editCell(i ,item)" [(ngModel)] ="this.selectedItem2.perch_price"  ></ion-input>
+                     </ion-item> 
+                  </td>
+                  <td  [ngClass]="{'hideMe': colSetting.pay_price == false , 'showMe': colSetting.pay_price == true }">
+                    <ion-text *ngIf="showMe != i">{{item.pay_price}}</ion-text>
+                    <ion-item *ngIf="showMe == i">
+                      <ion-input (keyup.enter)="editCell(i ,item)" [(ngModel)] ="this.selectedItem2.pay_price"  ></ion-input>
+                     </ion-item> 
+                  </td> 
+                  <td  [ngClass]="{'hideMe': colSetting.profit == false , 'showMe': colSetting.profit == true }">
+                    <ion-text *ngIf="(item.pay_price && item.perch_price) && item.pay_price >= item.perch_price">
+                      {{(((+item.pay_price - +item.perch_price)/+item.perch_price) * 100).toFixed(2)}}
+                    </ion-text>
+                    <ion-text *ngIf="(item.pay_price && item.perch_price) && item.pay_price < item.perch_price">
+                      {{(((+item.perch_price - +item.pay_price)/+item.perch_price) * 100).toFixed(2)}}
+                    </ion-text>
+                  </td>
+                
+                  <td  [ngClass]="{'hideMe': colSetting.instock == false , 'showMe': colSetting.instock == true }">{{item.quantity}}</td>
+                  <td  [ngClass]="{'hideMe': colSetting.total == false , 'showMe': colSetting.total == true }">{{+item.quantity * +item.perch_price }}</td>
+                  <td  [ngClass]="{'hideMe': colSetting.lastSold == false , 'showMe': colSetting.lastSold == true }">{{item.lastSoldDate }}</td>
+                  <!-- new -->
+                  <!-- <td   >{{item.sales28 }}</td>
+                  <td   >{{item.salesQuantity }}</td>
+                  <td   >{{item.purch28 }}</td> 
+                  <td   >{{item.perchQuantity }}</td> -->
+                  <td   >{{item.firstQuantity }}</td>
+                  
+
+                  <!-- end new -->
+
+                  <td  [ngClass]="{'hideMe': colSetting.edit == false , 'showMe': colSetting.edit == true }">
+                    <ion-button fill="clear" size="small" (click)="presentModal(item.id , 'edit')">
+                      <ion-icon name="create-outline" color="success" ></ion-icon> 
+                    </ion-button>
+                  </td>
+                   <td  [ngClass]="{'hideMe': colSetting.delete == false , 'showMe': colSetting.delete == true }">
+                    <ion-button fill="clear" size="small" (click)="deleteItem(item)">
+                      <ion-icon name="trash" color="danger" ></ion-icon>
+                    </ion-button>
+                  </td>  
+                 </tr> 
+                 <tr  *ngIf="loading == true " >
+                  <td> <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                  <td> <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                  <td> <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                  <td> <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td>  <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                 </tr>
+                 <tr  *ngIf="loading == true">
+                  <td> <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td>  <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                 </tr>
+               </table>  
+                <!-- filte mode  -->
+                <table  class="table"  *ngIf="filterMode == true" >
+                  <tr *ngIf="colSetting">
+                   <th>التسلسل</th>
+                   <th  [ngClass]="{'hideMe': colSetting.item_name == false , 'showMe': colSetting.item_name == true }">
+                     الصنف
+                   </th>
+                   <th  [ngClass]="{'hideMe': colSetting.item_desc== false , 'showMe': colSetting.item_desc== true }">اسم الصنف  (English)</th>
+                   <th  [ngClass]="{'hideMe': colSetting.aliasEn== false , 'showMe': colSetting.aliasEn== true }">اسم مستعار   (Alias) </th>  
+                   <th  [ngClass]="{'hideMe': colSetting.model == false , 'showMe': colSetting.model == true }">الموديل (model)</th>
+                  
+                   <th  [ngClass]="{'hideMe': colSetting.part_no == false , 'showMe': colSetting.part_no == true }">الكود (part no)</th>
+                   <th  [ngClass]="{'hideMe': colSetting.brand == false , 'showMe': colSetting.brand == true }">الماركة (brand) </th> 
+                   <th  [ngClass]="{'hideMe': colSetting.min_qty == false , 'showMe': colSetting.min_qty == true }">اقل كمية (MSQ)</th>
+                   <th  [ngClass]="{'hideMe': colSetting.item_unit== false , 'showMe': colSetting.item_unit== true }">الوحده (unit)</th> 
+                   <th  [ngClass]="{'hideMe': colSetting.perch_price == false , 'showMe': colSetting.perch_price == true }">سعر الشراء (purch price)</th>
+                   <th  [ngClass]="{'hideMe': colSetting.pay_price == false , 'showMe': colSetting.pay_price == true }">سعر الوحده (selling price)</th> 
+                   <th  [ngClass]="{'hideMe': colSetting.profit == false , 'showMe': colSetting.profit == true }">نسبة الفائدة (profit perc)</th>  
+                   <th  [ngClass]="{'hideMe': colSetting.instock == false , 'showMe': colSetting.instock == true }">المخزون (in stock)</th>
+                   <th  [ngClass]="{'hideMe': colSetting.lastSold == false , 'showMe': colSetting.lastSold == true }">اخر عملية بيع
+                    
+                  </th>
+                   <th  [ngClass]="{'hideMe': colSetting.total == false , 'showMe': colSetting.total == true }">المجموع</th>
+                   <th  [ngClass]="{'hideMe': colSetting.edit == false , 'showMe': colSetting.edit == true }"><strong>تعديل</strong>  </th> 
+                   <th  [ngClass]="{'hideMe': colSetting.delete == false , 'showMe': colSetting.delete == true }"><strong>حذف</strong>  </th> 
+                  </tr>
+                  <tr *ngFor="let item of filterArray ; let i = index"   (dblclick)="prClick(i , item)">
+                    <td>{{i+1}}</td>
+                     
+                   <td  [ngClass]="{'hideMe': colSetting.item_name == false , 'showMe': colSetting.item_name == true }">
+                     <ion-text *ngIf="showMe != i">{{item.item_name}}</ion-text>
+                     <ion-item *ngIf="showMe == i">
+                       <ion-input (keyup.enter)="editCell(i ,item)" [(ngModel)] ="this.selectedItem2.item_name"  ></ion-input>
+                      </ion-item>
+                   </td> 
+                   <td  [ngClass]="{'hideMe': colSetting.item_desc == false , 'showMe': colSetting.item_desc == true }">
+                     <ion-text *ngIf="showMe != i">{{item.item_desc}}</ion-text>
+                     <ion-item *ngIf="showMe == i">
+                       <ion-input (keyup.enter)="editCell(i ,item)" [(ngModel)] ="this.selectedItem2.item_desc"  ></ion-input>
+                      </ion-item>
+                   </td>
+                   <td  [ngClass]="{'hideMe': colSetting.aliasEn == false , 'showMe': colSetting.aliasEn == true }">
+                    <ion-text *ngIf="showMe != i">{{item.aliasEn}}</ion-text>
+                    <ion-item *ngIf="showMe == i">
+                      <ion-input (keyup.enter)="editCell(i ,item)" [(ngModel)] ="this.selectedItem2.aliasEn"  ></ion-input>
+                     </ion-item>
+                  </td>
+                   <td  [ngClass]="{'hideMe': colSetting.model == false , 'showMe': colSetting.model == true }">
+                     <ion-text *ngIf="showMe != i">{{item.model}}</ion-text>
+                     <ion-item *ngIf="showMe == i">
+                       <ion-input (keyup.enter)="editCell(i ,item)" [(ngModel)] ="this.selectedItem2.model"  ></ion-input>
+                      </ion-item>
+                   </td>
+                   <td  [ngClass]="{'hideMe': colSetting.part_no == false , 'showMe': colSetting.part_no == true }">
+                     <ion-text *ngIf="showMe != i">{{item.part_no}}</ion-text>
+                     <ion-item *ngIf="showMe == i">
+                       <ion-input (keyup.enter)="editCell(i ,item)" [(ngModel)] ="this.selectedItem2.part_no"  ></ion-input>
+                      </ion-item>
+                   </td>
+                   <td  [ngClass]="{'hideMe': colSetting.brand == false , 'showMe': colSetting.brand == true }">
+                     <ion-text *ngIf="showMe != i">{{item.brand}}</ion-text>
+                     <ion-item *ngIf="showMe == i">
+                       <ion-input (keyup.enter)="editCell(i ,item)" [(ngModel)] ="this.selectedItem2.brand"  ></ion-input>
+                      </ion-item>
+                   </td> 
+                   <td  [ngClass]="{'hideMe': colSetting.min_qty == false , 'showMe': colSetting.min_qty == true }">
+                     <ion-text *ngIf="showMe != i">{{item.min_qty}}</ion-text>
+                     <ion-item *ngIf="showMe == i">
+                       <ion-input (keyup.enter)="editCell(i ,item)" [(ngModel)] ="this.selectedItem2.min_qty"  ></ion-input>
+                      </ion-item>
+                   </td>
+                   <td  [ngClass]="{'hideMe': colSetting.item_unit == false , 'showMe': colSetting.item_unit == true }">
+                     <ion-text *ngIf="showMe != i">{{item.item_unit}}</ion-text>
+                     <ion-item *ngIf="showMe == i">
+                       <ion-input (keyup.enter)="editCell(i ,item)" [(ngModel)] ="this.selectedItem2.item_unit"  ></ion-input>
+                      </ion-item> 
+                   </td> 
+                   <td  [ngClass]="{'hideMe': colSetting.perch_price == false , 'showMe': colSetting.perch_price == true }">
+                     <ion-text *ngIf="showMe != i">{{item.perch_price}}</ion-text>
+                     <ion-item *ngIf="showMe == i">
+                       <ion-input (keyup.enter)="editCell(i ,item)" [(ngModel)] ="this.selectedItem2.perch_price"  ></ion-input>
+                      </ion-item> 
+                   </td>
+                   <td  [ngClass]="{'hideMe': colSetting.pay_price == false , 'showMe': colSetting.pay_price == true }">
+                     <ion-text *ngIf="showMe != i">{{item.pay_price}}</ion-text>
+                     <ion-item *ngIf="showMe == i">
+                       <ion-input (keyup.enter)="editCell(i ,item)" [(ngModel)] ="this.selectedItem2.pay_price"  ></ion-input>
+                      </ion-item> 
+                   </td> 
+                   <td  [ngClass]="{'hideMe': colSetting.profit == false , 'showMe': colSetting.profit == true }">
+                     <ion-text *ngIf="(item.pay_price && item.perch_price) && item.pay_price >= item.perch_price">
+                       {{(((+item.pay_price - +item.perch_price)/+item.perch_price) * 100).toFixed(2)}}
+                     </ion-text>
+                     <ion-text *ngIf="(item.pay_price && item.perch_price) && item.pay_price < item.perch_price">
+                       {{(((+item.perch_price - +item.pay_price)/+item.perch_price) * 100).toFixed(2)}}
+                     </ion-text>
+                   </td>
+                 
+                   <td  [ngClass]="{'hideMe': colSetting.instock == false , 'showMe': colSetting.instock == true }">{{item.quantity}}</td>
+                   <td  [ngClass]="{'hideMe': colSetting.total == false , 'showMe': colSetting.total == true }">{{+item.quantity * +item.perch_price }}</td>
+                   <td  [ngClass]="{'hideMe': colSetting.lastSold == false , 'showMe': colSetting.lastSold == true }">{{item.lastSoldDate }}</td>
+                   <td  [ngClass]="{'hideMe': colSetting.edit == false , 'showMe': colSetting.edit == true }">
+                     <ion-button fill="clear" size="small" (click)="presentModal(item.id , 'edit')">
+                       <ion-icon name="create-outline" color="success" ></ion-icon> 
+                     </ion-button>
+                   </td>
+                    <td  [ngClass]="{'hideMe': colSetting.delete == false , 'showMe': colSetting.delete == true }">
+                     <ion-button fill="clear" size="small" (click)="deleteItem(item)">
+                       <ion-icon name="trash" color="danger" ></ion-icon>
+                     </ion-button>
+                   </td>  
+                  </tr> 
+                  <tr  *ngIf="loading == true " >
+                   <td> <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                   <td> <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                   <td> <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                   <td> <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                   <td>  <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                  </tr>
+                  <tr  *ngIf="loading == true">
+                   <td> <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                   <td>  <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                   <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>  
+                  </tr>
+                </table>  
+
+
+               <!-- ///search  -->
+
+               <table class="table" *ngIf="searchMode == true">
+                  <th>التسلسل</th>
+                  <th>الصنف</th>
+                  <th>الموديل (model)</th>
+                  <th>اسم الصنف  (English)</th> 
+                  <th>الكود (part no)</th>
+                  <th>الماركة (brand) </th> 
+                  <th>اقل كمية (MSQ)</th>
+                  <th>الوحده (unit)</th> 
+                  <th>سعر الشراء (purch price)</th>
+                  <th>سعر الوحده (selling price)</th> 
+                  <th>نسبة الفائدة (profit perc)</th>  
+                  <th>المخزون (in stock)</th>
+                  <th>المجموع</th>
+                  <th ><strong>تعديل</strong>  </th> 
+                  <th ><strong>حذف</strong>  </th> 
+                  
+                <tr *ngFor="let item2 of searcResult ; let i = index">
+                  <td>{{i+1}}</td>
+                  <td>{{item2.item_name}}</td>
+                  <td>{{item2.item_desc}}</td>
+                  <td>{{item2.model}}</td>
+                  <td>{{item2.part_no}}</td>
+                  <td>{{item2.brand}}</td> 
+                  <td>{{item2.min_qty}}</td>
+                  <td>{{item2.unit}}</td> 
+                  <td>{{item2.perch_price}}</td>
+                  <td>{{item2.pay_price}}</td> 
+                  <td *ngIf="(item2.pay_price && item2.perch_price) && item2.pay_price >= item2.perch_price">
+                    {{((item2.pay_price - +item2.perch_price)/+item2.perch_price) * 100}}
+                  </td>
+                  <td *ngIf="(item2.pay_price && item2.perch_price) && item2.pay_price < item2.perch_price">
+                    {{((+item2.perch_price - +item2.perch_price)/+item2.perch_price) * 100}}
+                  </td>
+                  <td>{{item2.quantity}}</td>
+                  <td>{{+item2.quantity * +item2.perch_price }}</td>
+                 <td>
+                   <ion-button fill="clear" size="small" (click)="presentModal(item2.id , 'edit')">
+                     <ion-icon name="create-outline" color="success" ></ion-icon> 
+                   </ion-button>
+                 </td>
+                  <td>
+                   <ion-button fill="clear" size="small" (click)="deleteItem(item2)">
+                     <ion-icon name="trash" color="danger" ></ion-icon>
+                   </ion-button>
+                 </td>  
+                </tr> 
+              </table>  
+            
+           </ion-col>
+
+           <!-- exporting mode   -->
+
+
+          <ion-col  *ngIf="exportMode == true">
+
+         <!-- <div   #exceltable> -->
+           <table  id="exceltable" class="table" *ngIf="searchMode == false && filterMode == false"  >
+            <tr *ngIf="colSetting">
+             <th> 
+               التسلسل
+               
+             </th>
+             <th *ngIf="colSetting.item_name == true" >
+               الصنف
+               
+             </th>
+             <th *ngIf="colSetting.item_desc == true"  >اسم الصنف  (English)
+                
+             </th> 
+
+             <th *ngIf="colSetting.aliasEn true"  >اسم  مستعار  ( Alias)
+                
+            </th>
+             <th *ngIf="colSetting.model == true"  >الموديل (model)
+                
+             </th>
+            
+             <th *ngIf="colSetting.part_no == true" >الكود (part no)
+              
+             </th>
+             <th *ngIf="colSetting.brand == true"  >الماركة (brand) 
+                
+             </th> 
+             <th *ngIf="colSetting.min_qty == true"  >اقل كمية (MSQ)
+              
+             </th>
+             <th *ngIf="colSetting.item_unit == true"  >الوحده (unit)
+               
+             </th> 
+             <th *ngIf="colSetting.perch_price == true"  >سعر الشراء (purch price)
+                
+             </th>
+             <th *ngIf=" colSetting.pay_price == true"  >سعر الوحده (selling price)
+               
+             </th> 
+             <th *ngIf="colSetting.profit == true" >نسبة الفائدة (profit perc)
+               
+             </th>  
+             <th *ngIf="colSetting.instock == true"  >المخزون (in stock)
+              
+             </th>
+             <th *ngIf=" colSetting.total == true"  >المجموع
+              
+             </th>
+             <th *ngIf="colSetting.lastSold == true" >اخر عملية بيع
+                
+             </th>
+            
+            </tr>
+            <tr *ngFor="let item of items ; let i = index" >
+             <!-- <td>{{i+1}}</td> -->
+             <td>{{item.id}}</td>
+             <td *ngIf="colSetting.item_name == true" >
+               <ion-text *ngIf="showMe != i">{{item.item_name}}</ion-text>
+               
+             </td> 
+             <td *ngIf="colSetting.item_desc == true" >
+               <ion-text *ngIf="showMe != i">{{item.item_desc}}</ion-text>
+                
+             </td>
+             <td *ngIf="colSetting.aliasEn == true" >
+              <ion-text *ngIf="showMe != i">{{item.aliasEn}}</ion-text>
+               
+            </td>
+             <td *ngIf="colSetting.model == true" >
+               <ion-text *ngIf="showMe != i">{{item.model}}</ion-text>
+               
+             </td>
+             <td *ngIf="colSetting.part_no == true" >
+               <ion-text *ngIf="showMe != i">{{item.part_no}}</ion-text>
+                
+             </td>
+             <td *ngIf="colSetting.brand == true" >
+               <ion-text *ngIf="showMe != i">{{item.brand}}</ion-text>
+                
+             </td> 
+             <td *ngIf="colSetting.min_qty == true" >
+               <ion-text *ngIf="showMe != i">{{item.min_qty}}</ion-text>
+               
+             </td>
+             <td *ngIf="colSetting.item_unit == true" >
+               <ion-text *ngIf="showMe != i">{{item.item_unit}}</ion-text>
+                
+             </td> 
+             <td *ngIf="colSetting.perch_price == true" >
+               <ion-text *ngIf="showMe != i">{{item.perch_price}}</ion-text>
+                
+             </td>
+             <td *ngIf="colSetting.pay_price == true" >
+               <ion-text *ngIf="showMe != i">{{item.pay_price}}</ion-text>
+               
+             </td> 
+             <td *ngIf="colSetting.profit == true">
+               <ion-text *ngIf="(item.pay_price && item.perch_price) && item.pay_price >= item.perch_price">
+                 {{(((+item.pay_price - +item.perch_price)/+item.perch_price) * 100).toFixed(2)}}
+               </ion-text>
+               <ion-text *ngIf="(item.pay_price && item.perch_price) && item.pay_price < item.perch_price">
+                 {{(((+item.perch_price - +item.pay_price)/+item.perch_price) * 100).toFixed(2)}}
+               </ion-text>
+             </td>
+           
+             <td *ngIf="colSetting.profit == true" >{{item.quantity}}</td>
+             <td *ngIf="colSetting.total == true"  >{{+item.quantity * +item.perch_price }}</td>
+             <td *ngIf="colSetting.lastSold == true" >{{item.lastSoldDate }}</td>
+
+
+               
+            </tr> 
+         
+         
+          </table>
+         <!-- </div>   -->
+           <!-- filte mode  -->
+           <table id="exceltable" class="table"  *ngIf="filterMode == true" >
+            <tr *ngIf="colSetting">
+              <th> 
+                التسلسل
+                
+              </th>
+              <th *ngIf="colSetting.item_name == true" >
+                الصنف
+                
+              </th>
+              <th *ngIf="colSetting.item_desc == true" >اسم الصنف  (English)
+                 
+              </th> 
+              <th *ngIf="colSetting.aliasEn == true" >اسم مستعار  (Alias)
+                 
+              </th> 
+              <th *ngIf="colSetting.model == true" >الموديل (model)
+                 
+              </th>
+             
+              <th *ngIf="colSetting.part_no == true" >الكود (part no)
+               
+              </th>
+              <th *ngIf="colSetting.brand == true" >الماركة (brand) 
+                 
+              </th> 
+              <th *ngIf="colSetting.min_qty == true">اقل كمية (MSQ)
+               
+              </th>
+              <th *ngIf="colSetting.item_unit == true" >الوحده (unit)
+                
+              </th> 
+              <th *ngIf="colSetting.perch_price == true" >سعر الشراء (purch price)
+                 
+              </th>
+              <th *ngIf=" colSetting.pay_price == true">سعر الوحده (selling price)
+                
+              </th> 
+              <th *ngIf="colSetting.profit == true" >نسبة الفائدة (profit perc)
+                
+              </th>  
+              <th *ngIf="colSetting.instock == true" >المخزون (in stock)
+               
+              </th>
+              <th *ngIf=" colSetting.total == true" >المجموع
+               
+              </th>
+              <th *ngIf="colSetting.lastSold == true" >اخر عملية بيع
+                 
+              </th>
+             
+             </tr>
+             <tr *ngFor="let item of filterArray ; let i = index"   >
+              <!-- <td>{{i+1}}</td> -->
+              <td>{{item.id}}</td>
+              <td *ngIf="colSetting.item_name == true"  >
+                <ion-text *ngIf="showMe != i">{{item.item_name}}</ion-text>
+                
+              </td> 
+              <td *ngIf="colSetting.item_desc == true"  >
+                <ion-text *ngIf="showMe != i">{{item.item_desc}}</ion-text>
+                 
+              </td>
+              <td *ngIf="colSetting.aliasEn"  >
+                <ion-text *ngIf="showMe != i">{{item.aliasEn}}</ion-text>
+                 
+              </td>
+
+              <td *ngIf="colSetting.model == true"  >
+                <ion-text *ngIf="showMe != i">{{item.model}}</ion-text>
+                
+              </td>
+              <td *ngIf="colSetting.part_no == true"  >
+                <ion-text *ngIf="showMe != i">{{item.part_no}}</ion-text>
+                 
+              </td>
+              <td *ngIf="colSetting.brand == true"  >
+                <ion-text *ngIf="showMe != i">{{item.brand}}</ion-text>
+                 
+              </td> 
+              <td *ngIf="colSetting.min_qty == true" >
+                <ion-text *ngIf="showMe != i">{{item.min_qty}}</ion-text>
+                
+              </td>
+              <td *ngIf="colSetting.item_unit == true">
+                <ion-text *ngIf="showMe != i">{{item.item_unit}}</ion-text>
+                 
+              </td> 
+              <td *ngIf="colSetting.perch_price == true" >
+                <ion-text *ngIf="showMe != i">{{item.perch_price}}</ion-text>
+                 
+              </td>
+              <td *ngIf="colSetting.pay_price == true">
+                <ion-text *ngIf="showMe != i">{{item.pay_price}}</ion-text>
+                
+              </td> 
+              <td *ngIf="colSetting.profit == true" >
+                <ion-text *ngIf="(item.pay_price && item.perch_price) && item.pay_price >= item.perch_price">
+                  {{(((+item.pay_price - +item.perch_price)/+item.perch_price) * 100).toFixed(2)}}
+                </ion-text>
+                <ion-text *ngIf="(item.pay_price && item.perch_price) && item.pay_price < item.perch_price">
+                  {{(((+item.perch_price - +item.pay_price)/+item.perch_price) * 100).toFixed(2)}}
+                </ion-text>
+              </td>
+            
+              <td *ngIf="colSetting.instock == true" >{{item.quantity}}</td>
+              <td *ngIf="colSetting.total == true" >{{+item.quantity * +item.perch_price }}</td>
+              <td *ngIf="colSetting.lastSold == true" >{{item.lastSoldDate }}</td>
+ 
+ 
+                
+             </tr> 
+           </table>  
+         </ion-col>
+
+
+          </ion-row>
+        </ion-grid>
+      </ion-col> 
+    </ion-row>
+  </ion-grid>
+  
+</ion-content>
+<!-- <ion-footer>
+  <ion-item button (click)="createPdf()"></ion-item>
+</ion-footer> -->

@@ -1,0 +1,542 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <!-- sh605579887 -->
+   
+    <ion-title>سجل المبيعات</ion-title>
+   
+      <ion-button fill="clear" class="ion-margin"  (click)="changeMode()" slot="end"> 
+          <ion-label><ion-icon name="wifi-outline" [color]="color" style="font-size:20px"></ion-icon></ion-label> 
+          <ion-label><ion-text color="dark"  *ngIf="color == 'primary'">متصل</ion-text></ion-label>   
+          <ion-label><ion-text  color="dark" *ngIf="color == 'dark'">غير متصل</ion-text></ion-label>   
+      </ion-button>
+
+      <!-- <ion-popover  #popover [isOpen]="isOpen" (didDismiss)="didDissmis()">
+        <ng-template> -->
+          <!-- <ion-header>
+            <ion-toolbar dir="rtl">
+              <ion-item>
+                <ion-input #popInput [(ngModel)] ="searchTerm" (ionChange)="searchItem($event)"></ion-input>
+                <ion-button fill="clear" (click)="clear()" slot="end">
+                  <ion-icon name="close" color="danger"></ion-icon>
+                </ion-button>
+               </ion-item>
+            </ion-toolbar>
+          </ion-header> -->
+          <!-- <ion-content class="ion-padding" dir="rtl">  -->
+            <!-- spinner -->
+            <!-- <ion-list class="ion-text-center"  *ngIf="searchResult.length==0 && searchTerm =='' ">
+              <ion-label>
+                <ion-spinner name="lines-sharp"></ion-spinner>
+              </ion-label> 
+            </ion-list> -->
+            
+            <!-- <ion-list *ngIf="finalResult.length>0"> 
+              <ion-item button *ngFor="let item of finalResult"  >{{item.item_name}}</ion-item>
+            </ion-list> -->
+             <!-- <ion-list *ngIf="searchResult.length>0" class="hide"> 
+              <ion-item button *ngFor="let item1 of searchResult | filter:searchTerm"  >{{item1.item_name}}</ion-item>
+            </ion-list>
+            <ion-list *ngIf="aliasResult.length>0" class="hide"> 
+              <ion-item button *ngFor="let item2 of aliasResult | filter:aliasTerm"  >{{item2.aliasEn}}</ion-item>
+            </ion-list> -->
+             <!-- <ion-list *ngIf="searchResult.length>0"> 
+              <ion-item button *ngFor="let item of searchResult" (click)="selectFromPop(item)"    class="dark" [ngClass]="{'red':item.quantity == 0 , 'dark':item.quantity > 0}">
+                {{item.item_name}} 
+              </ion-item>
+            </ion-list> 
+          </ion-content>
+        </ng-template>
+      </ion-popover> -->
+   
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="device == 'desktop'">
+  <ion-grid *ngIf="user_info && store_info">
+    <ion-row dir="rtl">
+      <ion-col size="12">
+        <ion-card class="ion-no-padding ion-no-margin">
+          <ion-grid class="ion-no-padding ion-no-margin">
+            <ion-row>
+              <ion-col size="12">  
+                  <ion-grid class="ion-no-padding ion-no-margin">
+                    <ion-row dir="rtl">
+                      <ion-radio-group [(ngModel)]="radioVal"  (ionChange)="radioChange($event)" >
+                        <ion-grid class="ion-no-padding ion-no-margin">
+                          <ion-row>
+                            <ion-col> 
+                              <ion-item class="custInput">
+                                <input  *ngIf="sub_account" class="bnone" placeholder="اختر  حساب العميل" list="accountsSales" id="accountSales" [(ngModel)]="selectedAccount.sub_name"  (change)="pickAccount($event)">
+                                <datalist *ngIf="sub_account" style="border: none;" id="accountsSales" style="height: auto;max-height: 20px;">
+                                  <option *ngFor="let ac of sub_account ; let i = index"   [value]="ac.sub_name"></option>
+                                </datalist>
+                                <ion-label *ngIf="!sub_account">
+                                  <ion-text color="danger" >خطأ في التحميل </ion-text>
+                                 </ion-label>
+                                <ion-button  *ngIf="!sub_account" fill="clear" size="small" slot="end">
+                                  <ion-icon name="refresh" color="success"></ion-icon>
+                                </ion-button>
+                                <ion-button  fill="clear" size="small" slot="end" (click)="clear()">
+                                  <ion-icon name="close-circle" color="danger"></ion-icon>
+                                </ion-button>   
+                              </ion-item>   
+                            </ion-col>
+                            <ion-col class="ion-no-padding ion-no-margin">
+                              <ion-item lines="none" >
+                                <ion-radio [value]="0" class="ion-margin-end"></ion-radio>
+                                <ion-label>مبيعات حديثة</ion-label> 
+                              </ion-item>
+                            </ion-col>
+                            <ion-col class="ion-no-padding ion-no-margin">
+                              <ion-item lines="none" >
+                                <ion-radio [value]="1" class="ion-margin-end"></ion-radio>
+                                <ion-label>بحث  في تاريخ</ion-label> 
+                              </ion-item>
+                            </ion-col>
+                            <ion-col class="ion-no-padding ion-no-margin">
+                              <ion-item lines="none">
+                                <ion-radio [value]="2" class="ion-margin-end"></ion-radio>
+                                <ion-label>بحث في فترة</ion-label> 
+                              </ion-item>
+                            </ion-col>
+                            <ion-col class="ion-no-padding ion-no-margin">
+                              <ion-item lines="none">
+                                <ion-radio [value]="3" class="ion-margin-end"></ion-radio>
+                                <ion-label> فواتير  مبدئية </ion-label> 
+                              </ion-item>
+                            </ion-col> 
+                          </ion-row>
+                        </ion-grid> 
+                      </ion-radio-group>
+
+                    </ion-row>
+                    <ion-row dir="rtl">
+                      <ion-col size="4">
+                        <ion-item class="custInput" *ngIf="radioVal != 0 && radioVal != 3">
+                          <input style="width:100%"  [(ngModel)]="startingDate" type="date"  id="startingDate" name="startingDate" />
+                          <!-- <ion-input type="date"  [(ngModel)]="payInvo.pay_date"  placeholder="التاريخ"></ion-input> -->
+                        </ion-item>  
+                      </ion-col>
+                      <ion-col size="4" *ngIf="radioVal == 2 ">
+                        <ion-item class="custInput"> 
+                          <input style="width:100%" [(ngModel)]="endDate"  type="date"  id="endDate" name="endDate" />
+                          <!-- <ion-input type="date"  [(ngModel)]="payInvo.pay_date"  placeholder="التاريخ"></ion-input> -->
+                        </ion-item>  
+                      </ion-col>
+                      <ion-col size="4" class="ion-text-end">
+                        <ion-item lines="none">
+                          <ion-buttons slot="end"> 
+                            <ion-button  fill="outline" color="success"  (click)="search()"  > 
+                              <ion-icon name="search-outline" color="success"></ion-icon>
+                              <ion-label><ion-text color="dark">بحــث</ion-text></ion-label> 
+                            </ion-button>
+                          </ion-buttons>
+                        </ion-item>
+                      </ion-col> 
+                    </ion-row>
+                  </ion-grid> 
+              </ion-col> 
+            </ion-row>
+           </ion-grid> 
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+ 
+  <ion-grid class="ion-margin-top" *ngIf="user_info && store_info">
+
+    <ion-row>
+      <ion-card class="custCard">
+      </ion-card>
+    </ion-row>
+
+    <ion-row dir="rtl">
+      <ion-col size="12" class="ion-no-padding">
+        <ion-grid> 
+          <ion-row>
+            <ion-col size="12">
+            <ion-card>
+               <table class="table">
+                 <tr>
+                  <th>التسلسل</th>
+                  <!-- <th>رقم الفاتورة</th> -->
+                  <th>العميل</th>
+                  <th>التاريخ</th>
+                  <th>اجمالي المبلغ</th>
+                  <th>الخصــم</th>  
+                  <th>الإجمالي بعد الخصم</th>  
+                  <th>نقدا</th>  
+                  <th>المتبقي</th>   
+                  <th>تعليق</th>
+                  <th>المستخدم</th>  
+                  <th ><strong>تعديل</strong></th> 
+                  <th ><strong>طياعة</strong></th> 
+                  
+                 </tr>
+                 <tr *ngFor="let pay of payArray ; let i = index">
+                  <td>{{i+1}}</td>
+                  <!-- <td>{{pay.pay_id}}</td> -->
+                  <td>{{pay.sub_name}}</td>
+                  <td> {{pay.pay_date}}</td>
+                  <td>{{pay.tot_pr}}</td>
+                  <td>{{pay.discount}}</td>
+                  <td>{{+pay.tot_pr - +pay.discount}}</td>
+                  <td>{{pay.pay}}</td>
+                  <td>{{pay.changee}}</td> 
+                  <td>{{pay.payComment}}</td>
+                  <td>{{pay.user_name}}</td>
+                  <td>
+                    <ion-button fill="clear" size="small" (click)="getPayInvoDetail(pay , pay.sub_name,'edit')">
+                      <ion-icon name="create-outline" color="success" ></ion-icon>  
+                    </ion-button>
+                  </td>
+                  <td>
+                    <ion-button fill="clear" size="small" (click)="printInvo('printarea',pay)">
+                      <ion-icon name="print" color="brimary" ></ion-icon> 
+                    </ion-button>
+                  </td>
+                 </tr>
+
+              <!--    <ion-icon name="cloud-offline-outline"></ion-icon> -->
+
+                 <!-- skeleton -->
+                 
+                 <tr  *ngIf="loading == true">
+                  <td> <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td>  <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                 </tr>
+                 <tr *ngIf="loading == true" >
+                  <td> <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td>  <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                 </tr>
+                 <tr  *ngIf="loading == true">
+                  <td> <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td>  <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                 </tr> 
+               </table> 
+               <ion-row class="ion-justify-content-center ion-margin-top" *ngIf="showEmpty == true"> 
+                 <ion-col size="4" class="ion-text-center">  
+                   <ion-label> 
+                     <ion-icon style="font-size: 30px;"  name="archive-outline"></ion-icon>
+                  </ion-label>
+                  <h4> لا توجد سجلات </h4> 
+                 </ion-col>
+               </ion-row>
+            </ion-card>
+          </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-col>
+  
+  
+    <!-- <ion-row>
+            <ion-col size="12">
+              <ion-card>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="4"> 
+                     <ion-label  class="ion-padding"><strong>الصنف</strong></ion-label> 
+                        <ion-item class="custInput">
+                          <input  list="browsers" id="browser" [(ngModel)]="selectedItem.item_name"  (change)="pickDetail($event)">
+                         
+                          <datalist style="border: none;" id="browsers" style="height: auto;max-height: 20px;">
+                            <option *ngFor="let item of items ; let i = index"   [value]="item.item_name"></option>
+                        </datalist>
+                        </ion-item>  
+                    </ion-col>
+                    <ion-col size="2"> 
+                      <ion-label class="ion-padding"><strong>الكمية</strong></ion-label>
+                      <ion-item class="custInput">
+                        <ion-input  [(ngModel)]="selectedItem.qty"  (ionChange)="qtyhange($event.target.val)" #qtyId  ></ion-input>
+                      </ion-item> 
+                    </ion-col>
+                    <ion-col size="2">
+                      <ion-label class="ion-padding"><strong>سعر الوحده</strong></ion-label>
+                      <ion-item class="custInput">
+                        <ion-input [(ngModel)]="selectedItem.pay_price"></ion-input>
+                      </ion-item>
+                    </ion-col>
+                    <ion-col size="2">
+                      <ion-label class="ion-padding"><strong>المجموع</strong></ion-label>
+                      <ion-item class="custInput">
+                        <ion-input [(ngModel)]="selectedItem.tot"></ion-input>
+                      </ion-item>
+                    </ion-col>
+                    <ion-col size="2" class="ion-padding"> 
+                      <ion-button expand="block" routerDirection="root" color="success"  (click)="addTolist()" >
+                        <ion-label class="ion-text-center"> +</ion-label>
+                      </ion-button> 
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-card>
+            </ion-col>
+          </ion-row> -->
+  
+      
+      
+    </ion-row>
+  </ion-grid>
+ 
+</ion-content>
+
+<ion-content *ngIf="device == 'mobile'">
+ 
+  <ion-grid *ngIf="user_info && store_info">
+    <ion-row dir="rtl">
+      <ion-col size="12">
+        <ion-card class="ion-no-padding ion-no-margin">
+          <ion-grid class="ion-no-padding ion-no-margin">
+            <ion-row>
+              <ion-col size="12">  
+                  <ion-grid class="ion-no-padding ion-no-margin">
+                    <ion-row dir="rtl"> 
+                      <ion-radio-group [(ngModel)]="radioVal"  (ionChange)="radioChange($event)" >
+                        <ion-grid class="ion-no-padding ion-no-margin">
+                          <ion-row>
+                            <ion-col size="12"> 
+
+                              <ion-item class="custInput">
+                                <input  *ngIf="sub_account" class="bnone" placeholder="اختر  حساب العميل" list="accountsSales" id="accountSales" [(ngModel)]="selectedAccount.sub_name"  (change)="pickAccount($event)">
+                                <datalist *ngIf="sub_account" style="border: none;" id="accountsSales" style="height: auto;max-height: 20px;">
+                                  <option *ngFor="let ac of sub_account ; let i = index"   [value]="ac.sub_name"></option>
+                                </datalist>
+                                <ion-label *ngIf="!sub_account">
+                                  <ion-text color="danger" >خطأ في التحميل </ion-text>
+                                 </ion-label>
+                                <ion-button  *ngIf="!sub_account" fill="clear" size="small" slot="end">
+                                  <ion-icon name="refresh" color="success"></ion-icon>
+                                </ion-button>
+                                <ion-button  fill="clear" size="small" slot="end" (click)="clear()">
+                                  <ion-icon name="close-circle" color="danger"></ion-icon>
+                                </ion-button>   
+                              </ion-item>   
+                            </ion-col>
+                            
+                              <ion-col>
+                                <ion-item lines="none" >
+                                  <ion-radio [value]="0" class="ion-margin-end"></ion-radio>
+                                  <ion-label>مبيعات حديثة</ion-label> 
+                                </ion-item>
+                              </ion-col>
+                              
+                              <ion-col>
+                                <ion-item lines="none" >
+                                  <ion-radio [value]="1" class="ion-margin-end"></ion-radio>
+                                  <ion-label>بحث  في تاريخ</ion-label> 
+                                </ion-item>
+                              </ion-col>
+                              <ion-col>
+                                <ion-item lines="none">
+                                  <ion-radio [value]="2" class="ion-margin-end"></ion-radio>
+                                  <ion-label>بحث في فترة</ion-label> 
+                                </ion-item>
+                              </ion-col>
+                              <ion-col>
+                                <ion-item lines="none">
+                                  <ion-radio [value]="3" class="ion-margin-end"></ion-radio>
+                                  <ion-label> فواتير  مبدئية </ion-label> 
+                                </ion-item>
+                              </ion-col>
+                             
+                          </ion-row>
+                        </ion-grid> 
+                      </ion-radio-group> 
+                    </ion-row>
+                    <ion-row dir="rtl">
+                      <ion-col size="6">
+                        <ion-item class="custInput" *ngIf="radioVal != 0 && radioVal != 3">
+                          <input style="width:100%"  [(ngModel)]="startingDate" type="date"  id="startingDate" name="startingDate" />
+                          <!-- <ion-input type="date"  [(ngModel)]="payInvo.pay_date"  placeholder="التاريخ"></ion-input> -->
+                        </ion-item>  
+                      </ion-col>
+                      <ion-col size="6" *ngIf="radioVal == 2 ">
+                        <ion-item class="custInput"> 
+                          <input style="width:100%" [(ngModel)]="endDate"  type="date"  id="endDate" name="endDate" />
+                          <!-- <ion-input type="date"  [(ngModel)]="payInvo.pay_date"  placeholder="التاريخ"></ion-input> -->
+                        </ion-item>  
+                      </ion-col>
+                      <ion-col size="8" class="ion-text-end">
+                        <ion-item lines="none">
+                          <ion-buttons slot="end"> 
+                            <ion-button  fill="outline" color="success"  (click)="search()"  > 
+                              <ion-icon name="search-outline" color="success"></ion-icon>
+                              <ion-label><ion-text color="dark">بحــث</ion-text></ion-label> 
+                            </ion-button>
+                          </ion-buttons>
+                        </ion-item>
+                      </ion-col> 
+                    </ion-row>
+                  </ion-grid> 
+              </ion-col> 
+            </ion-row>
+           </ion-grid> 
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+ 
+  <ion-grid class="ion-margin-top" dir="rtl" *ngIf="user_info && store_info">
+    <ion-list *ngIf="loading == true">
+      <ion-item>
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>  
+      </ion-item>
+      <ion-item>
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>  
+      </ion-item>
+      <ion-item>
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>  
+      </ion-item>
+      </ion-list>
+    <ion-accordion-group *ngIf="payArray">
+      <ion-accordion *ngFor="let pay of payArray ; let i = index"  (click)="getPayDetailsForMob(pay)" [value]="i"   toggleIcon="caret-down-circle" toggleIconSlot="end" >
+        <ion-item slot="header" color="light" > 
+          <ion-icon name="newspaper-outline" color="primary" slot="start"></ion-icon>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="12">
+                <ion-label>{{pay.sub_name}}</ion-label>
+              </ion-col>
+              <ion-col size="4">
+                <ion-label><ion-note>{{pay.pay_date | date:'dd-MM'}}</ion-note>    </ion-label>
+              </ion-col>
+              <ion-col size="8" class="ion-text-end">
+                <ion-label>{{+pay.tot_pr - +pay.discount}}</ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          
+        </ion-item>
+
+        <ion-item slot="header" color="light"  *ngIf="loadingDetails == true"><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></ion-item>
+        <ion-item slot="header" color="light"  *ngIf="loadingDetails == true"><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></ion-item>
+        <ion-item slot="header" color="light"  *ngIf="loadingDetails == true"><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></ion-item>
+       
+        <div class="ion-padding" slot="content">
+          <ion-item color="light"  *ngIf="loadingDetails == true"><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></ion-item>
+            <ion-list *ngIf="pay.item_details">
+              <ion-item color="light" *ngFor="let item of pay.item_details" > 
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="12">
+                      <ion-label>{{item.item_name}}</ion-label>
+                    </ion-col>
+                    <ion-col size="12">
+                      <ion-label><ion-note>الكمية :</ion-note>{{item.quantity}}</ion-label>
+                    </ion-col>
+                    <ion-col size="12" class="ion-text-end">
+                      <ion-label><ion-note>السعر :</ion-note>{{item.pay_price}}</ion-label>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid> 
+              </ion-item>
+              <ion-grid>
+              </ion-grid>
+            </ion-list> 
+            <ion-list *ngIf=" !pay.item_details || pay.item_details.length == 0">
+              <ion-label>حدث خطأ في الفاتورة</ion-label>
+            </ion-list>
+          <ion-item-divider></ion-item-divider>
+          <ion-list>
+            <ion-item lines="none">
+              <ion-label><ion-note>المجموع  : </ion-note><strong>{{pay.tot_pr}}</strong></ion-label>
+            </ion-item>
+            <ion-item lines="none" *ngIf="pay.discount > 0">
+              <ion-label><ion-note>تخفيض  : </ion-note><strong>{{pay.discount}}</strong></ion-label>
+            </ion-item>
+            <ion-item lines="none" *ngIf="pay.discount > 0">
+              <ion-label><ion-note> صافي المبلغ    : 
+              </ion-note><strong> {{+pay.tot_pr - +pay.discount}} </strong></ion-label>
+            </ion-item>
+          </ion-list>
+          <ion-row class="ion-justify-content-center">
+            <ion-col size="6">
+              <ion-button  fill="outline" color="success"  (click)="getPayInvoDetail(pay , pay.sub_name,'edit')"  > 
+                <ion-icon name="search-outline" color="success"></ion-icon>
+                <ion-label><ion-text color="dark">تعديل</ion-text></ion-label> 
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button  fill="outline" color="success"  (click)="createPdf(pay)"  > 
+                <ion-icon name="search-outline" color="success"></ion-icon>
+                <ion-label><ion-text color="dark">طباعة</ion-text></ion-label> 
+              </ion-button>
+            </ion-col>  
+          </ion-row>
+       
+        </div>
+      </ion-accordion> 
+    </ion-accordion-group>
+
+    
+  </ion-grid>
+ 
+</ion-content>
+
+<ion-footer *ngIf="payArray">
+  <ion-grid dir="rtl" *ngIf="device == 'desktop'" >
+    <ion-row>
+      <ion-col>
+        <ion-label><ion-text>إجمالي المبيعات : </ion-text><br>  <strong>{{sums.tot.toFixed(2)}}</strong></ion-label>
+      </ion-col>
+      <ion-col>
+        <ion-label><ion-text>اجمالي الخصم  : </ion-text><br>  <strong>{{sums.discount.toFixed(2)}}</strong></ion-label>
+      </ion-col>
+      <ion-col>
+        <ion-label><ion-text>المبيعات بعد الخصم : </ion-text><br>  <strong>{{sums.totAfterDiscout.toFixed(2)}}</strong></ion-label>
+      </ion-col>
+      <ion-col>
+        <ion-label><ion-text>اجمالي النقد : </ion-text><br>  <strong>{{sums.pay.toFixed(2)}}</strong></ion-label>
+      </ion-col>
+      <ion-col>
+        <ion-label><ion-text>اجمالي الاجل : </ion-text><br>  <strong>{{sums.change.toFixed(2)}}</strong></ion-label>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-grid dir="rtl" *ngIf="device == 'mobile'" >
+    <ion-row>
+      <ion-col size="6">
+        <ion-label><ion-text>إجمالي المبيعات : </ion-text><br>  <strong>{{sums.tot.toFixed(2)}}</strong></ion-label>
+      </ion-col>
+      <ion-col size="6">
+        <ion-label><ion-text>اجمالي الخصم  : </ion-text><br>  <strong>{{sums.discount.toFixed(2)}}</strong></ion-label>
+      </ion-col>
+      <ion-col size="12">
+        <ion-label><ion-text>المبيعات بعد الخصم : </ion-text><br>  <strong>{{sums.totAfterDiscout.toFixed(2)}}</strong></ion-label>
+      </ion-col>
+      <ion-col size="6">
+        <ion-label><ion-text>اجمالي النقد : </ion-text><br>  <strong>{{sums.pay.toFixed(2)}}</strong></ion-label>
+      </ion-col>
+      <ion-col size="6">
+        <ion-label><ion-text>اجمالي الاجل : </ion-text><br>  <strong>{{sums.change.toFixed(2)}}</strong></ion-label>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-footer>

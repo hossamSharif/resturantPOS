@@ -1,0 +1,51 @@
+
+
+<ion-content>
+<ion-grid class="custRow" dir="rtl">
+  <ion-row class="ion-justify-content-center">
+    <ion-col size="11" >
+      <ion-card class="cust-card">
+        <ion-card-header class="ion-text-center">
+          <h3> تسجيل دخول </h3>
+        </ion-card-header> 
+        <ion-grid>
+          <ion-row class=" ion-justify-content-center">
+            <ion-col size="12">
+              <!-- <ion-item class="custInput">
+              <input  list="browsers2" id="browser2" [(ngModel)]="store_info.store_name"  (change)="pickDetail($event)">
+                       
+              <datalist style="border: none;" id="browsers2" style="height: auto;max-height: 20px;">
+                <option *ngFor="let store of stores ; let i = index"   [value]="store.store_name"></option>
+              </datalist>
+            </ion-item> -->
+              <!-- <ion-select [(ngModel)]="USER_INFO.store_id" class="custInput" placeholder="كلمة المرور">
+                <ion-select-option>السوق الشعبي</ion-select-option>
+                <ion-select-option>الخرطوم السلمة</ion-select-option>
+              </ion-select> -->
+            </ion-col>
+            <ion-col size="9" >
+              <ion-item class="custInput">
+                <ion-icon name="lock-closed-outline" slot="end" ></ion-icon>
+              <ion-input [(ngModel)]="USER_INFO.user_name" placeholder="اسم المستخدم" ></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="9" >
+              <ion-item class="custInput">
+                 <ion-icon name="eye-outline" slot="end" ></ion-icon>
+                  <ion-input type="password"  [(ngModel)]="USER_INFO.password" placeholder="كلمة المرور" ></ion-input>
+              </ion-item> 
+            </ion-col>
+          </ion-row>
+          <ion-row class="ion-justify-content-center">
+            <ion-col size="8" >
+              <ion-button expand="block" routerDirection="root" color="success"  (click)="loginUser()">
+                <ion-label class="ion-text-center" > دخـــول</ion-label>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+</ion-content>

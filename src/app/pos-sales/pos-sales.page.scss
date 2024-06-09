@@ -1,0 +1,83 @@
+.custInput{
+    border-style: solid;
+    border-color: var(--ion-color-light);
+    border-radius: 5px;
+    }
+    .cust-card{
+        border-radius: 5px;
+    }
+    .show{ visibility: visible; }
+
+    .hide{visibility: hidden;}
+    .custRow{
+        margin-top: 5rem;
+        }
+.bnone{
+  border: none;
+}
+
+
+.items-container {
+  overflow: auto;
+  white-space: nowrap;
+  min-height: 300px;
+  max-height: 300px;
+}
+.items-container2 {
+  overflow: auto;
+  white-space: nowrap;
+  min-height: 385px;
+  max-height: 385px;
+}
+
+// .items-container ion-col {
+//   display: inline-block;
+//   width: 25%;
+// }
+
+.item-title {
+  height: 2em; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;  
+}
+
+ion-segment {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+ion-segment-button {
+  display: inline-block;
+}
+
+
+ .red{
+  color:var(--ion-color-danger) 
+ }
+ .darko{
+  color: var(--ion-color-dark)
+ }
+ion-popover{
+  --offset-y : -30px
+}
+.custInp{
+  border-right-style: solid;
+    border-right-width: 0.5px;
+    text-align: center;
+}
+ 
+  .table{
+       text-align: center;
+    width: 100%;
+    margin: 12px;
+  }
+
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+  td, th {border: 1px solid #dddddd;text-align: center;padding: 8px; font-size: 14px;font-weight: bold;color: black;}
+       

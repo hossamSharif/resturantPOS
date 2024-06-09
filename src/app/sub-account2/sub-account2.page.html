@@ -1,0 +1,246 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title> الحسابات </ion-title> 
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-grid  *ngIf="user_info && store_info" >
+      <ion-row dir="rtl">
+        <ion-col size="12">
+         
+            <ion-grid class="ion-no-padding ion-no-margin"> 
+              <ion-row>
+                <ion-col size="4"  offset="2">
+                  <ion-item class="custInput">
+                    <ion-label>   بحث بإسم الحساب  </ion-label> 
+                    <input  *ngIf="sub_account" class="bnone" placeholder="اختر  حساب العميل" list="accountsSales" id="accountSales" [(ngModel)]="selectedAccount.sub_name"  (change)="pickAccount($event)">
+                    <datalist *ngIf="sub_account" style="border: none;" id="accountsSales" style="height: auto;max-height: 20px;">
+                      <option *ngFor="let ac of sub_account ; let i = index"   [value]="ac.sub_name"></option>
+                    </datalist>
+                    <ion-label *ngIf="!sub_account">
+                      <ion-text color="danger" >خطأ في التحميل </ion-text>
+                     </ion-label>
+                    <ion-button  *ngIf="!sub_account" fill="clear" size="small" slot="end" >
+                      <ion-icon name="refresh" color="success"></ion-icon>
+                    </ion-button>   
+                  </ion-item>   
+                </ion-col> 
+                 
+                  <ion-col size="3" offset="1">  
+                    <ion-item class="custInput"> 
+                      <ion-label>  بحث برقم الحساب </ion-label>
+                      <ion-input [(ngModel)]="codeSe" ></ion-input>
+                    </ion-item> 
+                  </ion-col>
+                  <ion-col size="2">
+                    <ion-button fill="outline" color="primary"  (click)="searchCode(codeSe)"> 
+                      بحــث
+                    </ion-button>
+                  </ion-col>
+              </ion-row>
+             </ion-grid> 
+         
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+ 
+
+<ion-grid>
+  <ion-row>
+    <ion-col size="5" class="ion-margin-top">
+      <ion-card>
+        <ion-item class="bgP" >
+            <h4><ion-text color="light">قائمة الحسابات </ion-text> </h4>
+           
+        </ion-item>
+          <ion-item *ngFor="let ac of sub_account ; let i = index">
+            <ion-label>
+              <ion-note>{{ac.id}}-</ion-note>
+             <ion-text>{{ac.sub_name}}</ion-text> 
+            </ion-label>
+            <ion-buttons slot="end">
+              <ion-button size="small" fill="clear" slot="end" color="primary" (click)="searchId(ac.id)">
+                <ion-icon name="create-outline" color="primary"></ion-icon>
+              </ion-button>
+              <!-- <ion-button size="small" fill="clear" slot="end" color="success"  (click)="refresh()">
+                <ion-icon name="add" color="success"></ion-icon>
+              </ion-button> -->
+            </ion-buttons>
+          </ion-item>
+      </ion-card>
+    </ion-col>
+
+    <ion-col size="7">
+      <ion-grid dir="rtl">
+        <ion-row class="ion-justify-content-center">
+          <ion-col size="12" class="ion-padding-end ion-padding-start "> 
+            <ion-card>
+              <ion-item class="bgP" >
+                <h4><ion-text color="light">بيانات الحساب </ion-text>  </h4> 
+                <ion-button size="small" fill="outline" slot="end"  color="light"  (click)="refresh()">
+                  <ion-icon name="add" color="light"></ion-icon>
+                  حساب جديد
+                 </ion-button>
+            </ion-item>
+              <ion-grid>
+                <ion-row>
+                  <ion-col size="6" class="ion-margin-top">
+                    <ion-label class="ion-padding"><strong>اسم الحساب </strong></ion-label>
+                    <ion-item class="custInput" *ngIf="sklton==false"> 
+                      <ion-input [(ngModel)]="payInvo.sub_name" ></ion-input>
+                    </ion-item>
+                    <ion-skeleton-text *ngIf="sklton==true" animated style="width: 100% ;height : 100%;"></ion-skeleton-text> 
+
+                  </ion-col>
+                  <ion-col size="6" class="ion-margin-top">
+                    <ion-label class="ion-padding"><strong>الحساب الرئيسي</strong></ion-label>
+                    <ion-item class="custInput" *ngIf="sklton==false">
+                      <input  *ngIf="main_account" class="bnone" placeholder="اختر  الحساب  الرئيسي" list="accountmain" id="accountmainid" [(ngModel)]="selectedMainAccount.ac_name"  (change)="pickMainAccount($event)">
+                      <datalist *ngIf="main_account" style="border: none;" id="accountmain" style="height: auto;max-height: 20px;">
+                        <option *ngFor="let ac of main_account ; let i = index"   [value]="ac.ac_name"></option>
+                      </datalist>
+                      <ion-label *ngIf="!main_account">
+                        <ion-text color="danger" >خطأ في التحميل </ion-text>
+                       </ion-label>
+                      <ion-button  *ngIf="!main_account" fill="clear" size="small" slot="end" >
+                        <ion-icon name="refresh" color="success"></ion-icon>
+                      </ion-button>   
+                    </ion-item> 
+                    <ion-skeleton-text *ngIf="sklton==true" animated style="width: 100% ;height : 100%;"></ion-skeleton-text> 
+                    
+                  </ion-col> 
+                  <ion-col size="6" class="ion-margin-top"  >
+                    <ion-label class="ion-padding"><strong> كود الحساب </strong></ion-label>
+                    <ion-item class="custInput" *ngIf="sklton==false"> 
+                      <ion-input [(ngModel)]="payInvo.sub_code" ></ion-input>
+                    </ion-item>
+                    <ion-skeleton-text *ngIf="sklton==true" animated style="width: 100% ;height : 100%;"></ion-skeleton-text> 
+
+                  </ion-col>
+                  <ion-col size="6"  class="ion-margin-top">
+                    <ion-label class="ion-padding"><strong>الرصيد الإفتتاحي  </strong></ion-label>
+                    <ion-item class="custInput" *ngIf="sklton==false"> 
+                      <ion-input [(ngModel)]="payInvo.sub_balance" ></ion-input>
+                    </ion-item>
+                    <ion-skeleton-text *ngIf="sklton==true" animated style="width: 100% ;height : 100%;"></ion-skeleton-text> 
+
+                  </ion-col>
+                 
+                  <ion-col size="12" class="ion-margin-top">
+                    <ion-label class="ion-padding"><strong>طبيعة الحساب </strong></ion-label>
+                    <ion-radio-group *ngIf="sklton==false"  [(ngModel)]="payInvo.sub_type"  (ionChange)="radioChange($event)" >
+                      <ion-grid class="ion-no-padding ion-no-margin">
+                        <ion-row  class="custInput">
+                          <ion-col class="ion-no-padding ion-no-margin">
+                            <ion-item lines="none" >
+                              <ion-radio disabled="true" value="credit" class="ion-margin-end"></ion-radio>
+                              <ion-label>دائن-credit</ion-label> 
+                            </ion-item>
+                          </ion-col>
+                          <ion-col class="ion-no-padding ion-no-margin">
+                            <ion-item lines="none" >
+                              <ion-radio disabled="true" value ="debit" class="ion-margin-end"></ion-radio>
+                              <ion-label>مدين-debit</ion-label> 
+                            </ion-item>
+                          </ion-col> 
+                        </ion-row>
+                      </ion-grid> 
+                    </ion-radio-group>
+                    <ion-skeleton-text *ngIf="sklton==true" animated style="width: 100% ;height : 100%;"></ion-skeleton-text> 
+
+                      <!-- <ion-label  *ngIf="payInvo.sub_type == 'credit'"><strong> دائن </strong></ion-label>
+                      <ion-label  *ngIf="payInvo.sub_type == 'debit'"><strong> مدين </strong></ion-label> -->
+                      <!-- <ion-input  disabled [(ngModel)]="payInvo.sub_type" ></ion-input> -->
+                  </ion-col>
+                  
+
+                  <!-- <ion-col size="6" class="ion-margin-top">
+                    <ion-label class="ion-padding"><strong>نوع الحساب </strong></ion-label>
+                    <ion-radio-group [(ngModel)]="payInvo.ac_behavior"  (ionChange)="radioChange2($event)" >
+                      <ion-grid class="ion-no-padding ion-no-margin">
+                        <ion-row  class="custInput">
+                          <ion-col class="ion-no-padding ion-no-margin">
+                            <ion-item lines="none" >
+                              <ion-radio value="1" class="ion-margin-end"></ion-radio>
+                              <ion-label> حساب مساعد  </ion-label> 
+                            </ion-item>
+                          </ion-col>
+                          <ion-col class="ion-no-padding ion-no-margin">
+                            <ion-item lines="none" >
+                              <ion-radio value="2" class="ion-margin-end"></ion-radio>
+                              <ion-label>  مركز تكلفة </ion-label> 
+                            </ion-item>
+                          </ion-col> 
+                        </ion-row>
+                      </ion-grid> 
+                    </ion-radio-group>
+                  </ion-col> -->
+
+                
+                
+                   <ion-col size="6"   class="ion-margin-top">
+                    <ion-label class="ion-padding"><strong>تصنيف الحساب   </strong></ion-label>
+                    <ion-item class="custInput" *ngIf="sklton==false">
+                      <input  *ngIf="main_account" class="bnone" placeholder="اختر التصنيف   " list="accountcategory" id="accountcategoryid" [(ngModel)]="selectedCategory.cat_name"  (change)="pickAccountCategory($event)">
+                      <datalist *ngIf="account_category" style="border: none;" id="accountcategory" style="height: auto;max-height: 20px;">
+                        <option *ngFor="let ac of account_category ; let i = index"   [value]="ac.cat_name"></option>
+                      </datalist>
+                      <ion-label *ngIf="!main_account">
+                        <ion-text color="danger" >خطأ في التحميل </ion-text>
+                      </ion-label>
+                      <ion-button  *ngIf="!main_account" fill="clear" size="small" slot="end" >
+                        <ion-icon name="refresh" color="success"></ion-icon>
+                      </ion-button>   
+                    </ion-item> 
+                    <ion-skeleton-text *ngIf="sklton==true" animated style="width: 100% ;height : 100%;"></ion-skeleton-text> 
+                  </ion-col> 
+
+                  <ion-col size="6" class="ion-margin-top"  >
+                    <ion-label class="ion-padding"><strong>الهاتف </strong></ion-label>
+                    <ion-item class="custInput" *ngIf="sklton==false"> 
+                      <ion-input [(ngModel)]="payInvo.phone" ></ion-input>
+                    </ion-item>
+                    <ion-skeleton-text *ngIf="sklton==true" animated style="width: 100% ;height : 100%;"></ion-skeleton-text> 
+                  </ion-col>
+                  <ion-col size="12" class="ion-margin-top"  >
+                    <ion-label class="ion-padding"><strong>    العنوان</strong></ion-label>
+                    <ion-item class="custInput" *ngIf="sklton==false"> 
+                      <ion-input [(ngModel)]="payInvo.address"></ion-input>
+                    </ion-item>
+                    <ion-skeleton-text *ngIf="sklton==true" animated style="width: 100% ;height : 100%;"></ion-skeleton-text> 
+                  </ion-col>
+                </ion-row>
+                <ion-item-divider></ion-item-divider>
+                <ion-row class="ion-justify-content-center">
+                  <ion-col size="8"class="ion-margin-top ion-text-center" >
+                    <ion-button  *ngIf="status == 'save'"   fill="outline" color="success"  (click)="save()" >
+                      <ion-label class="ion-text-center"> حفــظ</ion-label>
+                    </ion-button>
+                    <ion-button *ngIf="status == 'edit'"  fill="outline"  color="warning"  (click)="update()" >
+                      <ion-label class="ion-text-center"> تعديل </ion-label>
+                    </ion-button>
+                    <!-- <ion-button *ngIf="status == 'edit'"   fill="outline" color="danger"  (click)="presentAlertConfirm()" >
+                      <ion-label class="ion-text-center"> حـذف</ion-label>
+                    </ion-button> -->
+                  </ion-col>
+                </ion-row>
+              </ion-grid> 
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-col>
+  </ion-row>
+  
+</ion-grid>
+
+
+ 
+
+</ion-content>

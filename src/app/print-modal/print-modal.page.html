@@ -1,0 +1,604 @@
+
+<!-- var dd = {
+	content: [
+	    {
+			columns: [
+			    {
+					width: '*',
+				     text:''
+				},
+			    {
+					width:'auto' ,
+					text:'BANSI GIRISH JAYANTILAL IMPORT & EXPORT ENTERPRISES',
+					alignment:'center'
+ 				},
+ 				{
+					width: '*',
+				     text:''
+				},
+			],
+			margin:[0,0,10,10]
+			
+		 },   	
+	    	{
+			columns: [
+			    {
+					width: '*',
+				     text:''
+				},
+			    {
+					width:'auto' ,
+					text:' Exclusive agent for brands (POWERMAX , SIMBA , GIRISH )',
+					alignment:'center'
+ 				},
+ 				{
+					width: '*',
+				     text:''
+				}
+			],
+				margin:[0,0,10,10]
+			
+		}, 
+		 	{
+			columns: [
+			    {
+					width: '*',
+				     text:''
+				},
+			    {
+					width:'auto' ,
+					text:' فاتورة مبيعات',
+					alignment:'center'
+ 				},
+ 				{
+					width: '*',
+				     text:''
+				}
+			],
+				margin:[0,10,0,10]
+			
+		},
+		{
+			columns: [
+				{
+					width: 90,
+					text:'التاريخ :'
+				},
+				{
+					width: '*',
+				     text:''
+				},
+				{
+					width: 90,
+					text:''
+ 				},
+ 				{
+					width: '*',
+					text: 'العميل:'
+				},
+			],
+				margin:[0,20,0,10]
+			
+		
+		}, 
+		{
+		 	columns: [
+				{
+					width: 90,
+					text:'رقم الهاتف :'
+				},
+				{
+					width: '*',
+				     text:''
+				},
+				{
+					width: 90,
+					text:''
+ 				},
+ 				{
+					width: '*',
+					text: 'المكان :'
+				},
+			],
+				margin:[0,10,0,10]
+		},
+		{
+		  table: {
+				body: [
+					['المجموع', 'Column 2', 'Column 3' , 'Column 3', 'Column 3'],
+					['One value goes here', 'Another one here', 'OK?', 'Another one here', 'OK?', 'Another one here', 'OK?']
+				]
+			},
+			margin:[0,10,0,10]
+		},
+		{
+			columns: [
+			    {
+					width: '*',
+				     text:''
+				},
+			    {
+					width:'auto' ,
+					text:'kj;lkjd;qwljwfweww',
+					alignment:'center'
+ 				},
+ 				{
+					width: '*',
+				     text:''
+				}
+			],
+				margin:[0,10,0,10]
+			
+		},
+		
+	  ]
+	
+} -->
+<ion-content  style="max-width : 30px">
+  <div class="ion-padding" >
+      <div   #printarea1  id="printarea1" >
+        <div style="width : 100px ; height: 100px ;margin-left: 20%" > <img alt="" [src]="printArr[0].company.logoUrl"> </div>
+        <h4 class="ion-text-center">{{printArr[0].company.engName}} </h4>
+        <h4 class="ion-text-center">{{printArr[0].company.arName}} </h4>
+        <h4 class="ion-text-center"><ion-label>الرقم الضريبي / VAT NO :</ion-label><ion-text>{{printArr[0].company.vatNo}}</ion-text> </h4>
+        
+        <h3 class="ion-text-center" *ngIf="page=='sales' || page=='sales_record' || page=='pos-sales'"> فاتورة ضريبية مبسطة  </h3> 
+        <h3 class="ion-text-center" *ngIf="page=='sales' || page=='sales_record' || page=='pos-sales'"> simple vat invoice </h3> 
+
+        <div class="ion-margin-top rtl"  *ngIf="printArr && page!='perchOrderEn' && page!='perchOrderAr' && page!='perchOrderAr-record'  && page!='perchOrderEn-record'">
+          <div class="w100 rtl" style="display:inline-block ;">
+            <div class=" rtl flr ion-margin" style="width: 100%; position: relative; float: right; text-align:right;">
+               <ion-label><ion-text>التاريخ / date: </ion-text> <ion-text>{{printArr[0].payInvo.pay_date }} {{printArr[0].payInvo.pay_time }}</ion-text></ion-label>
+            </div>
+            <div class=" rtl flr ion-margin" style="width: 100%; position: relative; float: right; text-align:right;">
+              <ion-label><ion-text>  اسم المستخدم  / user name:</ion-text>  <ion-text>{{printArr[0].user_name }} </ion-text> </ion-label>  
+            </div>
+          </div>
+
+            <!-- table -->
+            <div class="ion-margin rtl"  >
+              <div class="ion-margin">
+                <table class="table" >
+                <tr>
+                <th class="th" style="border-bottom: .5px solid #dddddd ;">الصنف  item</th>
+                <th class="th" style="border-bottom: .5px solid #dddddd ;">الكمية  QTY</th> 
+                <th class="th" style="border-bottom: .5px solid #dddddd ;">سعر  unit price </th> 
+                <th class="th" style="border-bottom: .5px solid #dddddd ;">الخصم   discount</th>
+                <th class="th" style="border-bottom: .5px solid #dddddd ;">نسبة الضريبة   VAT%</th> 
+                <th class="th" style="border-bottom: .5px solid #dddddd ;">قيمة الضريبة   VAT</th> 
+                <th class="th" style="border-bottom: .5px solid #dddddd ;">   صافي القيمة  total</th>
+                </tr>
+                <tr *ngFor="let item of printArr[0].itemList ; let i = index"> 
+                  <td class="td" style="border: none;">{{item.item_name}}</td>
+                  <td class="td"  style="border: none;"> {{item.quantity}}</td>
+                  <td  class="td" style="border: none;">  {{item.pay_price}} </td> 
+                  <td  class="td" style="border: none;">  {{item.discount}} </td> 
+                  <td  class="td" style="border: none;">  {{item.tax}} </td> 
+                  <td class="td" style="border: none;">{{+item.pay_price + (+item.tax/100 * +item.pay_price)}}</td>
+                  <td  class="td" style="border: none;">  {{item.tot}} </td> 
+                </tr> 
+                <tr>
+                  <td ></td>
+                  <td ></td>
+                  <td ></td>
+                  <td></td>
+                  <td></td>
+                  <td class="td" style="border: none;">{{printArr[0].payInvo.tot_pr }}</td>
+                </tr>
+              </table> 
+              </div> 
+            </div>
+            <!-- totals -->
+            <div *ngIf="printArr" class="w100 rtl ion-margin"> 
+              <div class="w100 rtl" style="display:inline-block ;margin-right: 16px;">
+                <div class="rtl ion-text-center" style=" width:20% ;text-align: center;padding: 8px; position: relative; float: right;">
+                  <ion-label>صافي المبلغ  / total  </ion-label>
+                </div>
+                <div class="rtl ion-text-center "  style="width:30% ;text-align: center;padding: 8px; position: relative; float: right;">
+                  <ion-label> {{printArr[0].payInvo.tot_pr}}</ion-label>
+                </div>
+              </div>
+              <div  class="w100 rtl" style="display:inline-block ;margin-right: 16px;">
+                <div class="rtl ion-text-center" style=" width:20% ;text-align: center;padding: 8px; position: relative; float: right;">
+                  <ion-label>   نسبة الضريبة % / VAT%</ion-label>
+                </div>
+                <div class="rtl ion-text-center "  style="width:30% ;text-align: center;padding: 8px; position: relative; float: right;">
+                  <ion-label>  {{printArr[0].payInvo.discount}} </ion-label>
+                </div>
+              </div>
+              <div  class="w100 rtl" style="display:inline-block ;margin-right: 16px;">
+                <div class="rtl ion-text-center" style=" width:20% ;text-align: center;padding: 8px; position: relative; float: right;">
+                  <ion-label> قيمة الضريبة / VAT </ion-label>
+                </div>
+                <div class="rtl ion-text-center "  style="width:30% ;text-align: center;padding: 8px; position: relative; float: right;">
+                  <ion-label>  {{printArr[0].payInvo.discount}} </ion-label>
+                </div>
+              </div> 
+
+              <div   class="w100 rtl" style="display:inline-block ;margin-right: 16px;">
+                <div class="rtl ion-text-center" style=" width:20% ;text-align: center;padding: 8px; position: relative; float: right;">
+                  <ion-label> صافي المبلغ شامل الضريبة / total include VAT   </ion-label>
+                </div>
+                <div class="rtl ion-text-center "  style="width:30% ;text-align: center;padding: 8px; position: relative; float: right;">
+                  <ion-label> {{printArr[0].payInvo.tot_pr - +printArr[0].payInvo.discount}}   </ion-label>
+                </div>
+              </div> 
+           </div>
+           <!-- qr --> 
+           <div *ngIf="printArr">
+            <!-- <qrcode [qrdata]="printArr[0].qrcodedata" size="256" level="'M'"></qrcode> -->
+           </div>
+           <div *ngIf="printArr" class="w100 rtl ion-margin"> 
+            
+            <h6 class="ion-text-center"><ion-label>  Thank You For Visit    </ion-label> </h6>
+            <h6 class="ion-text-center"><ion-label>    شكرا لزيارتكم  </ion-label> </h6>
+          </div>
+          <div *ngIf="printArr" class="w100 rtl ion-margin"> 
+            
+            <h6 class="ion-text-center"><ion-label>    : {{printArr[0].company.address}} </ion-label> </h6>
+          </div>
+
+          <div *ngIf="printArr" class="w100 rtl ion-margin"> 
+           
+            <h6 class="ion-text-center"><ion-label>  الهاتف / phone  : {{printArr[0].company.phone - printArr[0].company.phone2 }}     </ion-label> </h6>
+             
+          </div>
+        </div>  
+      </div>
+  </div>  
+</ion-content>
+
+
+<ion-content *ngIf="mode != 'pos'">
+  <div class="ion-padding"  >
+      <div   #printarea1  id="printarea1" >
+        <h4 class="ion-text-center">BANSI GIRISH JAYANTILAL IMPORT & EXPORT ENTERPRISES </h4>
+        <h4 class="ion-text-center"  *ngIf="page=='sales' || page=='sales_record' || page=='perch' || page=='perch_record' ||  page=='perchOrderAr' || page=='perchOrderAr-record'">POWERMAX , SIMBA , GIRISH الوكيل الحصري لماركات  </h4>
+        <h4 class="ion-text-center"  *ngIf=" page=='perchOrderEn' || page=='perchOrderEn-record'"> Exclusive agent for brands (POWERMAX , SIMBA , GIRISH )  </h4>
+       
+        <h3 class="ion-text-center" *ngIf="page=='sales' || page=='sales_record'"> فاتورة مبيعات  </h3> 
+        <h3 class="ion-text-center"  *ngIf="page=='perch' || page=='perch_record'"> فاتورة مشتريات  </h3> 
+        <h3 class="ion-text-center"  *ngIf="page=='perchOrderEn' || page=='perchOrderEn-record'">  Purchase Order  </h3> 
+        <h3 class="ion-text-center"  *ngIf="page=='perchOrderAr' || page==' perchOrderAr-record'"> امر شراء    </h3> 
+        
+        
+        
+        <div class="ion-margin-top rtl"  *ngIf="printArr && page!='perchOrderEn' && page!='perchOrderAr' && page!='perchOrderAr-record'  && page!='perchOrderEn-record'">
+          <div class="w100 rtl" style="display:inline-block ;">
+            <div class=" rtl flr ion-margin" style="width: 30%; position: relative; float: left; text-align:left;">
+              <ion-label>التاريخ :</ion-label> {{printArr[0].payInvo.pay_date}}
+            </div>
+          
+            <div class="ion-margin " *ngIf="page=='sales' || page=='sales_record'" style=" width: 60%; position: relative; float: right;">
+              <ion-label *ngIf="printArr[0].sub_nameNew.length == 0 && page =='sales' ">العميل :
+                {{printArr[0].selectedAccount.sub_name}}</ion-label>
+              <ion-label *ngIf="printArr[0].sub_nameNew.length == 0 && page =='sales_record' ">العميل :
+                {{printArr[0].selectedAccount}}</ion-label>
+              <ion-label *ngIf="printArr[0].sub_nameNew.length>0">العميل : {{printArr[0].sub_nameNew}}</ion-label>
+            </div>
+  
+            <div class="ion-margin " *ngIf="page =='perch' || page=='perch_record'"  style=" width: 60%; position: relative; float: right;">
+              <ion-label *ngIf="printArr[0].sub_nameNew.length == 0 && page =='perch' ">المورد :
+                {{printArr[0].selectedAccount.sub_name}}</ion-label>
+              <ion-label *ngIf="printArr[0].sub_nameNew.length == 0 && page =='perch_record' ">المورد :
+                {{printArr[0].selectedAccount}}</ion-label>
+              <ion-label *ngIf="printArr[0].sub_nameNew.length>0">المورد : {{printArr[0].sub_nameNew}}</ion-label>
+            </div>
+          </div>
+
+          <div class="w100 rtl" style="display:inline-block ;">
+            <div class="ion-margin" *ngIf="page=='sales' || page=='sales_record'" style="width: 30%; position: relative; float: right ; text-align:right;"> 
+              <ion-label>المكان : {{printArr[0].selectedAccount.address}}</ion-label>
+            </div>
+
+            <div *ngIf="page=='sales' || page=='sales_record'" class="rtl ion-margin" style="width: 30%; position: relative; float: left; text-align:left;">
+              <ion-label>  رقم الهاتف   :  {{printArr[0].selectedAccount.phone}} </ion-label> 
+            </div> 
+             <!--   -->
+          </div> 
+
+
+            
+
+            <div class="ion-margin rtl"  >
+              <div class="ion-margin">
+                <table class="table" >
+                <tr>
+                <th class="th">التسلسل</th>
+                <th class="th">الصنف</th>
+                <th class="th">الكمية</th>
+                <th  *ngIf="page=='perch' || page=='perch_record'" class="th">
+                  سعر الشراء
+                </th>
+                <th *ngIf="page=='sales' || page=='sales_record'" class="th">
+                  سعر الوحده
+                </th>
+                <th class="th">المجموع</th>
+                </tr>
+                <tr   *ngFor="let item of printArr[0].itemList ; let i = index">
+                  <td class="td">{{i+1}}</td>
+                  <td class="td">{{item.item_name}}</td>
+                 <td class="td"> {{item.quantity}}</td>
+                 <td *ngIf="page=='sales' || page=='sales_record'" class="td">
+                  {{item.pay_price}}
+                </td>
+                 <td  *ngIf="page=='perch' || page=='perch_record'" class="td">
+                  {{item.perch_price}}
+                </td>
+                 <td class="td">{{+item.tot}}</td>
+                </tr> 
+                <tr>
+                  <td ></td>
+                  <td ></td>
+                  <td></td>
+                  <td></td>
+                  <td class="td">{{printArr[0].payInvo.tot_pr }}</td>
+                </tr>
+              </table> 
+              </div> 
+            </div>
+
+            <div *ngIf="printArr" class="w100 rtl ion-margin"> 
+              <div class="w100 rtl" style="display:inline-block ;margin-right: 16px;">
+                <div class="rtl ion-text-center" style=" width:20% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+                  <ion-label>إجمالي المبلغ </ion-label>
+                </div>
+                <div class="rtl ion-text-center "  style="width:30% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+                  <ion-label> {{printArr[0].payInvo.tot_pr}} ج.س</ion-label>
+                </div>
+              </div>
+              <div *ngIf="+printArr[0].payInvo.discount>0" class="w100 rtl" style="display:inline-block ;margin-right: 16px;">
+                <div class="rtl ion-text-center" style=" width:20% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+                  <ion-label>   الخصــم </ion-label>
+                </div>
+                <div class="rtl ion-text-center "  style="width:30% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+                  <ion-label>  {{printArr[0].payInvo.discount}}  ج.س</ion-label>
+                </div>
+              </div>  
+              <div *ngIf="+printArr[0].payInvo.discount>0" class="w100 rtl" style="display:inline-block ;margin-right: 16px;">
+                <div class="rtl ion-text-center" style=" width:20% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+                  <ion-label> الإجمالي بعدالخصم    </ion-label>
+                </div>
+                <div class="rtl ion-text-center "  style="width:30% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+                  <ion-label> {{printArr[0].payInvo.tot_pr - +printArr[0].payInvo.discount}}  ج.س</ion-label>
+                </div>
+              </div>
+              <div   class="w100 rtl" style="display:inline-block ;margin-right: 16px;">
+                <div class="rtl ion-text-center" style=" width:20% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+                  <ion-label>  المبلغ المدفوع نقدا      </ion-label>
+                </div>
+                <div class="rtl ion-text-center "  style="width:30% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+                  <ion-label>  {{printArr[0].payInvo.pay}}  ج.س</ion-label>
+                </div>
+              </div>
+              <div  class="w100 rtl" style="display:inline-block ;margin-right: 16px;">
+                <div class="rtl ion-text-center" style=" width:20% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+                  <ion-label>  المتبقي    </ion-label>
+                </div>
+                <div class="rtl ion-text-center "  style="width:30% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+                  <ion-label>  {{printArr[0].payInvo.changee}} ج.س</ion-label>
+                </div>
+              </div>
+             
+              <div   class="w100 rtl" style="display:inline-block ;margin-right: 16px;">
+                <div class="rtl ion-text-center" style=" width:20% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+                  <ion-label>  الرصيد الحالي    </ion-label>
+                  <ion-label *ngIf = "printArr[0].balanceStatus == 'debit'"> <strong>( عليه ) </strong></ion-label>
+                  <ion-label *ngIf = "printArr[0].balanceStatus == 'credit'">  <strong>( له ) </strong>  </ion-label>
+                </div>
+                <div class="rtl ion-text-center "  style="width:30% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+                  <ion-label>  {{printArr[0].sub_balanse}} ج.س</ion-label>
+                </div>
+              </div>
+
+              <!-- "sub_balanse": this.selectedAccount.sub_balance,
+              "balanceStatus": this.currentCustumerStatus -->
+          
+              <div class="rtl ion-margin" style="width: 30%; position: relative; float: left; text-align:left;">
+                <ion-label> اسم المستخدم :  {{printArr[0].payInvo.user_name}} </ion-label> 
+              </div>
+           </div>
+        </div>
+
+
+      <!-- purchase orders arabic -->
+
+
+      <div class="ion-margin-top rtl"  *ngIf="printArr && ( page=='perchOrderAr' || page=='perchOrderAr-record')">
+        <div class="w100 rtl" style="display:inline-block ;">
+          <div class=" rtl flr ion-margin" style="width: 30%; position: relative; float: left; text-align:left;">
+            <ion-label>التاريخ :</ion-label> {{printArr[0].payInvo.pay_date}}
+          </div>
+        
+          <div class="ion-margin" style=" width: 60%; position: relative; float: right;">
+            <ion-label *ngIf="printArr[0].sub_nameNew.length == 0 && page =='perchOrderAr' ">المورد :
+              {{printArr[0].selectedAccount.sub_name}}</ion-label>
+            <ion-label *ngIf="printArr[0].sub_nameNew.length == 0 && page =='perchOrderAr-record' ">المورد :
+              {{printArr[0].selectedAccount}}</ion-label>
+            <ion-label *ngIf="printArr[0].sub_nameNew.length>0">المورد : {{printArr[0].sub_nameNew}}</ion-label>
+          </div>
+        </div>
+
+        <div class="w100 rtl" style="display:inline-block ;">
+          <div class="ion-margin" style="width: 30%; position: relative; float: right ; text-align:right;"> 
+            <ion-label>العنوان : {{printArr[0].selectedAccount.address}}</ion-label>
+          </div>
+
+          <div class="rtl ion-margin" style="width: 30%; position: relative; float: left; text-align:left;">
+            <ion-label>  رقم الهاتف   :  {{printArr[0].selectedAccount.phone}} </ion-label> 
+          </div> 
+           <!--   -->
+        </div> 
+
+          <div class="ion-margin rtl"  >
+            <div class="ion-margin">
+              <table class="table" >
+              <tr>
+              <th class="th">التسلسل</th>
+              <th class="th">الصنف</th>
+              <th class="th">الكمية</th>
+              <th  class="th">
+                سعر الشراء
+              </th>
+              
+              <th class="th">المجموع</th>
+              </tr>
+              <tr   *ngFor="let item of printArr[0].itemList ; let i = index">
+                <td class="td">{{i+1}}</td>
+                <td class="td">{{item.item_name}}</td>
+               <td class="td"> {{item.quantity}}</td>
+               
+               <td   class="td">
+                {{item.perch_price}}
+              </td>
+               <td class="td">{{+item.tot}}</td>
+              </tr> 
+              <tr>
+                <td ></td>
+                <td ></td>
+                <td></td>
+                <td></td>
+                <td class="td">{{printArr[0].payInvo.tot_pr }}</td>
+              </tr>
+            </table> 
+            </div> 
+          </div>
+
+          <div *ngIf="printArr" class="w100 rtl ion-margin"> 
+            <div class="w100 rtl" style="display:inline-block ;margin-right: 16px;">
+              <div class="rtl ion-text-center" style=" width:20% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+                <ion-label>إجمالي المبلغ </ion-label>
+              </div>
+              <div class="rtl ion-text-center "  style="width:30% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+                <ion-label> {{printArr[0].payInvo.tot_pr}} ج.س</ion-label>
+              </div>
+            </div>
+
+            
+            <!-- <div *ngIf="+printArr[0].payInvo.discount>0" class="w100 rtl" style="display:inline-block ;margin-right: 16px;">
+              <div class="rtl ion-text-center" style=" width:20% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+                <ion-label>   الخصــم </ion-label>
+              </div>
+              <div class="rtl ion-text-center "  style="width:30% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+                <ion-label>  {{printArr[0].payInvo.discount}}  ج.س</ion-label>
+              </div>
+            </div>  
+            <div *ngIf="+printArr[0].payInvo.discount>0" class="w100 rtl" style="display:inline-block ;margin-right: 16px;">
+              <div class="rtl ion-text-center" style=" width:20% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+                <ion-label> الإجمالي بعدالخصم    </ion-label>
+              </div>
+              <div class="rtl ion-text-center "  style="width:30% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+                <ion-label> {{printArr[0].payInvo.tot_pr - +printArr[0].payInvo.discount}}  ج.س</ion-label>
+              </div>
+            </div> -->
+            <!-- "sub_balanse": this.selectedAccount.sub_balance,
+            "balanceStatus": this.currentCustumerStatus -->
+        
+            <div class="rtl ion-margin" style="margin-top:20px;width: 30%; position: relative; float: right; text-align:right;">
+              <ion-label> تعليق:  {{printArr[0].payInvo.payComment}} </ion-label> 
+            </div>
+         </div>
+      </div>
+
+ <!-- purchase orders english-->
+
+
+ <div class="ion-margin-top"  *ngIf="printArr && (page=='perchOrderEn' || page=='perchOrderEn-record')">
+  <div class="w100" style="display:inline-block ;">
+    <div class="flr ion-margin" style="width: 30%; position: relative; float: right; text-align:right;">
+      <ion-label>Date :</ion-label> {{printArr[0].payInvo.pay_date}}
+    </div>
+  
+    <div class="ion-margin" style=" width: 60%; position: relative; float: left;">
+      <ion-label *ngIf="printArr[0].sub_nameNew.length == 0 && page =='perchOrderEn' ">Supplier :
+        {{printArr[0].selectedAccount.sub_name}}</ion-label>
+      <ion-label *ngIf="printArr[0].sub_nameNew.length == 0 && page =='perchOrderEn-record' ">Supplier :
+        {{printArr[0].selectedAccount}}</ion-label>
+      <ion-label *ngIf="printArr[0].sub_nameNew.length>0">Supplier : {{printArr[0].sub_nameNew}}</ion-label>
+    </div>
+  </div>
+
+  <div class="w100 rtl" style="display:inline-block ;">
+    <div class="ion-margin" style="width: 30%; position: relative; float: right ; text-align:right;"> 
+      <ion-label>Address : {{printArr[0].selectedAccount.address}}</ion-label>
+    </div>
+
+    <div class="rtl ion-margin" style="width: 30%; position: relative; float: left; text-align:left;">
+      <ion-label> Phone No  :  {{printArr[0].selectedAccount.phone}} </ion-label> 
+    </div> 
+     <!--   -->
+  </div> 
+
+    <div class="ion-margin rtl"  >
+      <div class="ion-margin">
+        <table class="table" >
+        <tr>
+        <th class="th">No</th>
+        <th class="th">Item</th>
+        <th class="th">Qty</th>
+        <th   class="th">
+          Purchace price
+        </th>
+        
+        <th class="th">Total</th>
+        </tr>
+        <tr   *ngFor="let item of printArr[0].itemList ; let i = index">
+          <td class="td">{{i+1}}</td>
+          <td class="td">{{item.item_desc}}</td>
+         <td class="td"> {{item.quantity}}</td>
+         
+         <td   class="td">
+          {{item.perch_price}}
+        </td>
+         <td class="td">{{+item.tot}}</td>
+        </tr> 
+        <tr>
+          <td ></td>
+          <td ></td>
+          <td></td>
+          <td></td>
+          <td class="td">{{printArr[0].payInvo.tot_pr }}</td>
+        </tr>
+      </table> 
+      </div> 
+    </div>
+
+    <div *ngIf="printArr" class="w100 rtl ion-margin"> 
+      <div class="w100 rtl" style="display:inline-block ;margin-right: 16px;">
+        <div class="rtl ion-text-center" style=" width:20% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+          <ion-label>  Total </ion-label>
+        </div>
+        <div class="rtl ion-text-center "  style="width:30% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+          <ion-label> {{printArr[0].payInvo.tot_pr}} S.D</ion-label>
+        </div>
+      </div>
+
+      
+      <!-- <div *ngIf="+printArr[0].payInvo.discount>0" class="w100 rtl" style="display:inline-block ;margin-right: 16px;">
+        <div class="rtl ion-text-center" style=" width:20% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+          <ion-label>   الخصــم </ion-label>
+        </div>
+        <div class="rtl ion-text-center "  style="width:30% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+          <ion-label>  {{printArr[0].payInvo.discount}}  ج.س</ion-label>
+        </div>
+      </div>  
+      <div *ngIf="+printArr[0].payInvo.discount>0" class="w100 rtl" style="display:inline-block ;margin-right: 16px;">
+        <div class="rtl ion-text-center" style=" width:20% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+          <ion-label> الإجمالي بعدالخصم    </ion-label>
+        </div>
+        <div class="rtl ion-text-center "  style="width:30% ;border: .5px solid #dddddd;text-align: center;padding: 8px; position: relative; float: right;">
+          <ion-label> {{printArr[0].payInvo.tot_pr - +printArr[0].payInvo.discount}}  ج.س</ion-label>
+        </div>
+      </div> -->
+      <!-- "sub_balanse": this.selectedAccount.sub_balance,
+      "balanceStatus": this.currentCustumerStatus -->
+  
+      <div class="rtl ion-margin" style="margin-top:20px;width: 30%; position: relative; float: right; text-align:right;">
+        <ion-label> Comment:  {{printArr[0].payInvo.payComment}} </ion-label> 
+      </div>
+   </div>
+</div>
+
+      </div>
+  </div>  
+</ion-content>

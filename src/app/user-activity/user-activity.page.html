@@ -1,0 +1,69 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>أنشطة المستخدمين</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid dir="rtl">
+    <ion-row >
+      <ion-col size="6">
+        <ion-item lines="none" class="custInput">
+          <ion-input #popInput [(ngModel)] ="searchTerm" (ionChange)="searchItem($event)" placeholder="بحــث"></ion-input>
+          
+       </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row  >
+      <ion-list class="w100 ion-text-center" *ngIf="logHistoryArr.length>0 && loading == false && searchMode == false" >
+        <ion-item *ngFor="let log of logHistoryArr">
+        <ion-grid >
+          <ion-row>
+            <ion-col size="10"> 
+                {{log.desc}}    
+            </ion-col>
+            <ion-col size="2" class="ion-text-end">
+              <ion-text color = "primary">{{log.datee | dateAgo}}</ion-text>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item> 
+      </ion-list> 
+
+      <ion-list class="w100 ion-text-center" *ngIf="searchMode == true">
+        <ion-item *ngFor="let log of searchResult" >
+        <ion-grid >
+          <ion-row>
+            <ion-col size="10" class="ion-text-end"> 
+                {{log.desc}}    
+            </ion-col>
+            <ion-col size="2">
+              <ion-text color = "primary">{{log.datee | dateAgo}}</ion-text>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item> 
+      </ion-list> 
+
+    
+      <ion-list *ngIf="loading == true"  class="w100 ion-text-center">
+        <ion-item>
+          <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+        </ion-item>
+        <ion-item>
+          <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+        </ion-item>
+        <ion-item>
+          <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+        </ion-item>
+      </ion-list>
+
+
+
+    </ion-row>
+  </ion-grid>
+ 
+</ion-content>

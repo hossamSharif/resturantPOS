@@ -1,0 +1,84 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>الإعدادات والضبط</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-progress-bar *ngIf="progressVal >.2 && progressVal < 1" [value]="progressVal" ></ion-progress-bar>
+  <ion-grid class="ion-margin-top">
+    <ion-row dir="rtl" class="ion-justify-content-center">
+      
+    </ion-row>
+    <ion-row dir="rtl" class="ion-justify-content-center">
+      <ion-col size="12">
+        <h5> المزامنة والإتصال</h5>
+        <ion-card>
+          <ion-list class="ion-margin-top ion-margin-bottom">
+            <ion-item button (click) = "sync()">
+              <ion-label >مزامنة البيانات </ion-label> 
+              <ion-icon name="cloud-upload-outline" color="dark" slot="start"></ion-icon>  
+            </ion-item>
+            <ion-item button  (click) = "clickTo()">
+              <ion-label >وضع عدم الإتصال (العمل بدون انترنت) </ion-label>
+              <ion-toggle slot="end" [(ngModel)]="offline" [value]="offline" (ionChange)="radioChange($event)"></ion-toggle>
+              <ion-icon name="wifi-outline" [color]="color" slot="start"></ion-icon>
+              <!-- <ion-icon name="cloud-offline-outline" color="dark" slot="end"></ion-icon> -->
+            </ion-item>
+          </ion-list>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12">
+        <h5> اعدادات طرق البحث</h5>
+        <ion-card>
+          <ion-list class="ion-margin-top ion-margin-bottom">
+            <ion-radio-group [(ngModel)]="radioVal"  (ionChange)="radioChangeS($event)" >
+              <ion-grid class="ion-no-padding ion-no-margin">
+                <ion-row>
+                  
+                  <ion-col class="ion-no-padding ion-no-margin">
+                    <ion-item lines="none" >
+                      <ion-radio [value]="0" class="ion-margin-end"></ion-radio>
+                      <ion-label>  بحث بالإسم (لغة عربية)</ion-label> 
+                    </ion-item>
+                  </ion-col>
+                  <ion-col class="ion-no-padding ion-no-margin">
+                    <ion-item lines="none" >
+                      <ion-radio [value]="1" class="ion-margin-end"></ion-radio>
+                      <ion-label>  بحث بالإسم (لغة انجليزية)</ion-label> 
+                       
+                    </ion-item>
+                  </ion-col> 
+                </ion-row>
+              </ion-grid> 
+            </ion-radio-group>
+          </ion-list>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12">
+        <h5>السنة المالية</h5>
+        <ion-card>
+          <ion-list class="ion-margin-top ion-margin-bottom">
+            <ion-radio-group [(ngModel)]="selectedYear"  (ionChange)="yearChange($event,afterLoad)" >
+              <ion-grid class="ion-no-padding ion-no-margin">
+                <ion-row>     
+                  <ion-col size="12" class="ion-no-padding ion-no-margin" *ngFor="let y of yearArr">
+                    <ion-item lines="none" >
+                      <ion-radio [value]="y.id" class="ion-margin-end"></ion-radio>
+                      <ion-label> {{y.yearDesc}} (<ion-text> {{y.yearStart}}</ion-text> <ion-text color="primary"> <strong>-</strong> </ion-text> <ion-text> {{y.yearEnd}}</ion-text>) </ion-label>  
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+              </ion-grid> 
+            </ion-radio-group>
+          </ion-list>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

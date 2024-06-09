@@ -1,0 +1,293 @@
+<ion-app> 
+  <ion-split-pane  contentId="side" dir="rtl" *ngIf="isAuth == true">
+    <!-- <ion-menu contentId="side" type="overlay" >
+      <ion-content>
+        <ion-list id="inbox-list">
+          <ion-list-header><ion-label>نظام ادارة المخازن V11</ion-label></ion-list-header>
+          <ion-label class="ion-margin"><strong>فرع : </strong> <ion-text>{{store_info.store_name}}</ion-text></ion-label>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="8" class="ion-padding-top">
+              
+                <ion-label><strong>{{USER_INFO.full_name}}</strong> </ion-label>
+
+              </ion-col>
+              <ion-col size="4">
+                <ion-button fill="clear" color="danger" (click)="logOut()">
+                  <ion-icon name="lock-closed-outline" color="danger"  slot="end"></ion-icon>
+                   خروج
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          
+          <ion-item-divider></ion-item-divider>
+          <ion-menu-toggle auto-hide="false" >
+             
+            <ion-row>
+              <ion-col size="12">
+               
+                 <ion-icon class="ico"   color="primary"    name=" notifications-outline"></ion-icon> 
+                 <ion-label ><strong>التنبيهات </strong></ion-label>
+                </ion-col> 
+              </ion-row>
+            
+            <ion-item routerDirection="root" routerLink="folder/notifications" lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start">قائمة التنبيهات</ion-label>
+            
+            </ion-item>
+
+           
+          </ion-menu-toggle>
+          
+          <ion-menu-toggle auto-hide="false" class="ion-margin-top"> 
+            <ion-row>
+              <ion-col size="12">
+                 <ion-icon class="ico" color="primary"  name="basket-outline"></ion-icon> 
+                 <ion-label ><strong> المبيعات</strong></ion-label>
+              </ion-col> 
+            </ion-row>
+            
+            <ion-item *ngIf=" device == 'desktop'" routerDirection="root"  routerLink="folder/sales" lines="none"  routerLinkActive="selected">
+              <ion-label class="ion-margin-start">فاتورة مبيعات</ion-label>
+            </ion-item>
+            <ion-item *ngIf=" device == 'desktop'" routerDirection="root"  routerLink="folder/pos-sales" lines="none"  routerLinkActive="selected">
+              <ion-label class="ion-margin-start"> مبيعات</ion-label>
+            </ion-item>
+            <ion-item *ngIf=" device == 'desktop'" routerDirection="root"  routerLink="folder/salessnd" lines="none"  routerLinkActive="selected">
+              <ion-label class="ion-margin-start">  بدون مبيعات</ion-label>
+            </ion-item>
+            <ion-item *ngIf=" device == 'desktop'" routerDirection="root"  routerLink="folder/salessndrecord" lines="none"  routerLinkActive="selected">
+              <ion-label class="ion-margin-start">  سجل مبيعات</ion-label>
+            </ion-item>
+            <ion-item *ngIf="device == 'mobile'" routerDirection="root"  routerLink="folder/sales-mob" lines="none"  routerLinkActive="selected">
+              <ion-label class="ion-margin-start">فاتورة مبيعات</ion-label>
+            </ion-item>
+            <ion-item routerDirection="root" routerLink="folder/sales-record" lines="none"  routerLinkActive="selected">
+              <ion-label class="ion-margin-start">سجل مبيعات</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+  
+  
+          <ion-menu-toggle auto-hide="false" > 
+            <ion-row>
+               <ion-col size="12">
+                 <ion-icon class="ico"   color="primary"    name="bag-remove-outline"></ion-icon> 
+                 <ion-label ><strong>المشتريات </strong></ion-label>
+                </ion-col> 
+              </ion-row>
+              <ion-item routerDirection="root" *ngIf=" device == 'mobile'" routerLink="folder/purchase-mob" lines="none" detail="false" routerLinkActive="selected">
+                <ion-label class="ion-margin-start">فاتورة مشتريات</ion-label>
+              </ion-item>
+            <ion-item routerDirection="root" *ngIf=" device == 'desktop'" routerLink="folder/purchase" lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start">فاتورة مشتريات</ion-label>
+            </ion-item>
+            <ion-item routerDirection="root" *ngIf=" device == 'desktop'" routerLink="folder/purchsnd" lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start"> مشتريات</ion-label>
+            </ion-item>
+            <ion-item routerDirection="root" *ngIf=" device == 'desktop'" routerLink="folder/purchsndrecord" lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start"> سجل</ion-label>
+            </ion-item>
+            <ion-item routerDirection="root" routerLink="folder/purchase-record" lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start">سجل المشتريات</ion-label>
+            </ion-item> 
+            <ion-item routerDirection="root"  *ngIf=" device == 'desktop'" routerLink="folder/prch-order" lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start">طلبات الشراء  </ion-label>
+            </ion-item>
+            <ion-item routerDirection="root"  *ngIf=" device == 'desktop'" routerLink="folder/prch-order-record" lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start"> سجل طلبات الشراء  </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+  
+      
+          <ion-menu-toggle auto-hide="false" >
+            <ion-row>
+              <ion-col size="12">
+                 <ion-icon class="ico" color="primary"   name="file-tray-full-outline"></ion-icon> 
+              <ion-label><strong>المخزون</strong></ion-label>
+            </ion-col> 
+           </ion-row>
+             
+            <ion-item routerDirection="root" routerLink="folder/items" lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start"> قائمة الأصناف</ion-label>
+            </ion-item>
+            <ion-item routerDirection="root"  *ngIf=" device == 'desktop'" routerLink="folder/firstq-modal" lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start"> الكميات الإفتتاحية</ion-label>
+            </ion-item>
+            <ion-item routerDirection="root"  *ngIf=" device == 'desktop'" routerLink="folder/items-report"  lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start">حركة الأصناف </ion-label>
+            </ion-item>
+            <ion-item routerDirection="root"  *ngIf=" device == 'desktop'" routerLink="folder/tswia"  lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start">  التسوية الجردية </ion-label>
+            </ion-item>
+            <ion-item routerDirection="root"  *ngIf=" device == 'desktop'" routerLink="folder/tswia-record"  lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start">  سجل التسويات الجردية </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+  
+  
+          <ion-menu-toggle auto-hide="false" >
+            <ion-row >
+              <ion-col size="12">
+                 <ion-icon class="ico" color="primary"   name="cash-outline"></ion-icon> 
+              <ion-label><strong>الحسابات</strong></ion-label>
+            </ion-col> 
+           </ion-row>
+             
+            <ion-item routerDirection="root"  *ngIf=" device == 'desktop'" lines="none" routerLink="folder/sub-account2" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start"> ادارة الحسابات</ion-label>
+            </ion-item>
+            <ion-item routerDirection="root"  routerLink="folder/cash2" lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start"> السندات  </ion-label>
+            </ion-item>
+            <ion-item routerDirection="root"  routerLink="folder/cash3" lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start"> المصروفات </ion-label>
+            </ion-item>
+           
+            <ion-item routerDirection="root"  routerLink="folder/spend-record2" lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start">سجل السندات    </ion-label>
+            </ion-item>
+            <ion-item routerDirection="root"  routerLink="folder/statement2" lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start">كشف حساب    </ion-label>
+            </ion-item>
+            <ion-item routerDirection="root" routerLink="folder/balance-sheet2"  lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start"> الأرصدة  </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false" > 
+            <ion-row >
+              <ion-col size="12"> 
+                 <ion-icon class="ico" color="primary"   name="cog-outline"></ion-icon> 
+              <ion-label><strong>الإعدادات والضبط</strong></ion-label>
+            </ion-col> 
+           </ion-row>
+           <ion-item routerDirection="root" routerLink="folder/user-activity" lines="none" detail="false" routerLinkActive="selected">
+            <ion-label class="ion-margin-start">  انشطة المستخدمين</ion-label>
+           </ion-item>
+            <ion-item routerDirection="root" routerLink="folder/settings" lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start"> المزامنة والإتصال</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+         
+
+          
+        </ion-list> 
+      </ion-content> 
+    </ion-menu> -->
+
+
+    <!-- menue 2  -->
+
+    <ion-menu contentId="side" type="overlay" >
+      <ion-content>
+        <ion-list id="inbox-list">
+          <ion-list-header><ion-label>نظام ادارة المبيعات  V1</ion-label></ion-list-header>
+          <ion-label class="ion-margin"><strong>فرع : </strong> <ion-text>{{store_info.store_name}}</ion-text></ion-label>
+          <ion-grid >
+            <ion-row>
+              <ion-col size="8" class="ion-padding-top">
+              
+                <ion-label><strong>{{USER_INFO.full_name}}</strong> </ion-label>
+
+              </ion-col>
+              <ion-col size="4">
+                <ion-button fill="clear" color="danger" (click)="logOut()">
+                  <ion-icon name="lock-closed-outline" color="danger"  slot="end"></ion-icon>
+                   خروج
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          
+          <ion-item-divider></ion-item-divider>
+        
+          <ion-menu-toggle auto-hide="false" class="ion-margin-top"> 
+            <ion-row>
+              <ion-col size="12">
+                 <ion-icon class="ico" color="primary"  name="basket-outline"></ion-icon> 
+                 <ion-label ><strong> المبيعات</strong></ion-label>
+              </ion-col> 
+            </ion-row>
+            <ion-item *ngIf=" device == 'desktop'" routerDirection="root"  routerLink="folder/salessnd" lines="none"  routerLinkActive="selected">
+              <ion-label class="ion-margin-start">فاتورة مبيعات</ion-label>
+            </ion-item>
+            <ion-item *ngIf=" device == 'desktop'" routerDirection="root"  routerLink="folder/salessndrecord" lines="none"  routerLinkActive="selected">
+              <ion-label class="ion-margin-start">  سجل مبيعات</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+  
+  
+          <ion-menu-toggle auto-hide="false"> 
+            <ion-row>
+               <ion-col size="12">
+                 <ion-icon class="ico"   color="primary"    name="bag-remove-outline"></ion-icon> 
+                 <ion-label ><strong>المشتريات </strong></ion-label>
+                </ion-col> 
+            </ion-row>
+
+            <ion-item routerDirection="root" *ngIf=" device == 'desktop'" routerLink="folder/purchsnd" lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start">فاتورة مشتريات</ion-label>
+            </ion-item>
+           
+            <ion-item routerDirection="root" routerLink="folder/purchsndrecord" lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start">سجل المشتريات</ion-label>
+            </ion-item> 
+          
+          </ion-menu-toggle>
+  
+          <ion-menu-toggle auto-hide="false" >
+            <ion-row >
+              <ion-col size="12">
+                 <ion-icon class="ico" color="primary"   name="cash-outline"></ion-icon> 
+              <ion-label><strong>الحسابات</strong></ion-label>
+            </ion-col> 
+           </ion-row>
+             
+            <ion-item routerDirection="root"  *ngIf=" device == 'desktop'" lines="none" routerLink="folder/sub-account2" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start"> ادارة الحسابات</ion-label>
+            </ion-item>
+            <ion-item routerDirection="root"  routerLink="folder/cash2" lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start"> السندات  </ion-label>
+            </ion-item>
+            <ion-item routerDirection="root"  routerLink="folder/cash3" lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start"> المصروفات </ion-label>
+            </ion-item>
+           
+            <ion-item routerDirection="root"  routerLink="folder/spend-record2" lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start">سجل السندات    </ion-label>
+            </ion-item>
+            <ion-item routerDirection="root"  routerLink="folder/statement2" lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start">كشف حساب    </ion-label>
+            </ion-item>
+            <ion-item routerDirection="root" routerLink="folder/balance-sheet2"  lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start"> الأرصدة  </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-menu-toggle auto-hide="false" > 
+            <ion-row >
+              <ion-col size="12"> 
+                 <ion-icon class="ico" color="primary"   name="cog-outline"></ion-icon> 
+              <ion-label><strong>الإعدادات والضبط</strong></ion-label>
+            </ion-col> 
+           </ion-row>
+           <ion-item routerDirection="root" routerLink="folder/user-activity" lines="none" detail="false" routerLinkActive="selected">
+            <ion-label class="ion-margin-start">  انشطة المستخدمين</ion-label>
+           </ion-item>
+            <ion-item routerDirection="root" routerLink="folder/settings" lines="none" detail="false" routerLinkActive="selected">
+              <ion-label class="ion-margin-start"> المزامنة والإتصال</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+        </ion-list> 
+      </ion-content> 
+    </ion-menu>
+
+     <ion-router-outlet id="side" *ngIf="isAuth == true"></ion-router-outlet>
+  </ion-split-pane>
+  
+  <ion-router-outlet *ngIf="isAuth == false"></ion-router-outlet>
+
+
+</ion-app>

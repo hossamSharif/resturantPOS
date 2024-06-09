@@ -1,0 +1,318 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>  
+    <ion-title>تقرير حركة الصنف</ion-title> 
+      <!-- <ion-button fill="clear" class="ion-margin"  (click)="changeMode()" slot="end"> 
+          <ion-label><ion-icon name="wifi-outline" [color]="color" style="font-size:20px"></ion-icon></ion-label> 
+          <ion-label><ion-text color="dark"  *ngIf="color == 'primary'">متصل</ion-text></ion-label>   
+          <ion-label><ion-text  color="dark" *ngIf="color == 'dark'">غير متصل</ion-text></ion-label>   
+      </ion-button>  -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid *ngIf="user_info && store_info">
+    <ion-row dir="rtl">
+      <ion-col size="12">
+        <ion-card class="ion-no-padding ion-no-margin">
+          <ion-grid class="ion-no-padding ion-no-margin">
+            <ion-row>
+              <ion-col size="12">  
+                  <ion-grid class="ion-no-padding ion-no-margin">
+                    <ion-row dir="rtl">
+                      <ion-radio-group [(ngModel)]="radioVal"  (ionChange)="radioChange($event)" >
+                        <ion-grid class="ion-no-padding ion-no-margin">
+                          <ion-row>
+                            <ion-col class="ion-no-padding ion-no-margin">
+                              <ion-item lines="none" >
+                                <ion-radio [value]="0" class="ion-margin-end"></ion-radio>
+                                <ion-label>حركة الصنف</ion-label> 
+                              </ion-item>
+                            </ion-col>
+                            <ion-col class="ion-no-padding ion-no-margin">
+                              <ion-item lines="none" >
+                                <ion-radio [value]="1" class="ion-margin-end"></ion-radio>
+                                <ion-label>حركة صنف في تاريخ</ion-label> 
+                              </ion-item>
+                            </ion-col>
+                            <ion-col class="ion-no-padding ion-no-margin">
+                              <ion-item lines="none">
+                                <ion-radio [value]="2" class="ion-margin-end"></ion-radio>
+                                <ion-label>حركة صنف في فترة </ion-label> 
+                              </ion-item>
+                            </ion-col>
+                            <ion-col class="ion-no-padding ion-no-margin">
+                              <ion-item lines="none">
+                                <ion-radio [value]="3" class="ion-margin-end"></ion-radio>
+                                <ion-label>  الحركة اليومية للأصناف   </ion-label> 
+                              </ion-item>
+                            </ion-col>
+                          </ion-row>
+                        </ion-grid> 
+                      </ion-radio-group> 
+                    </ion-row>
+                    <ion-row dir="rtl">
+                     
+                      <ion-col size="3" *ngIf="loadingItems == true  && radioVal != 3">  
+                        <ion-item class="custInput">
+                          <ion-input [disabled]="true"></ion-input>
+                          <ion-spinner></ion-spinner>
+                        </ion-item>
+                      </ion-col>
+                      <ion-col size="3" *ngIf="loadingItems == false && radioVal != 3">  
+                           <ion-item class="custInput"   *ngIf="searchLang != 1"> 
+                            <input #dst *ngIf="items.length>0" class="bnone"  list="browsers" id="browser" [(ngModel)]="selectedItem.item_name"  (change)="pickDetail($event)"  >
+                            <datalist *ngIf="items.length>0" style="border: none;" id="browsers" style="height: auto;max-height: 20px;">
+                              <option *ngFor="let item of items ; let i = index"   [value]="item.item_name"></option>                                                                                        
+                            </datalist>
+                            <ion-label *ngIf="items.length==0">
+                              <ion-text color="danger" >خطأ في التحميل </ion-text>
+                             </ion-label> 
+                           </ion-item>
+                           <ion-item *ngIf="searchLang == 1" class="custInput"  > 
+                            <input #dst *ngIf="items.length>0" class="bnone"  list="browsers5561" id="browser5561" [(ngModel)]="selectedItem.item_desc"  (change)="pickDetail($event)"  >
+                            <datalist *ngIf="items.length>0"  id="browsers5561" style="border: none;height: auto;max-height: 20px;color: rgb(66, 3, 3)0000 ;">
+                              <option *ngFor="let item of items ; let i = index"   [value]="item.item_desc" ></option>
+                            </datalist>
+                            <ion-label *ngIf="items.length==0">
+                              <ion-text color="danger" >خطأ في التحميل </ion-text>
+                             </ion-label> 
+                           </ion-item>
+                      </ion-col>
+                      <ion-col size="3">
+                        <ion-item class="custInput" *ngIf="radioVal != 0 ">
+                          <input style="width:100%"  [(ngModel)]="startingDate" type="date"  id="startingDate" name="startingDate" /> 
+                        </ion-item>  
+                      </ion-col>
+                      <ion-col size="3" *ngIf="radioVal == 2 ">
+                        <ion-item class="custInput"> 
+                          <input style="width:100%" [(ngModel)]="endDate"  type="date"  id="endDate" name="endDate" />
+                          <!-- <ion-input type="date"  [(ngModel)]="payInvo.pay_date"  placeholder="التاريخ"></ion-input> -->
+                        </ion-item>  
+                      </ion-col>
+                      <ion-col size="3" class="ion-text-end">
+                        <ion-item lines="none">
+                          <ion-buttons slot="end"> 
+                            <ion-button  fill="outline" color="success"  (click)="search()"  > 
+                              <ion-icon name="search-outline" color="success"></ion-icon>
+                              <ion-label><ion-text color="dark">بحــث</ion-text></ion-label> 
+                            </ion-button>
+                          </ion-buttons>
+                        </ion-item>
+                      </ion-col> 
+                    </ion-row>
+                  </ion-grid> 
+              </ion-col> 
+            </ion-row>
+           </ion-grid> 
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-card *ngIf="payArray && radioVal != 3"  >
+      <ion-grid>
+       <ion-row> 
+        <ion-col size="3">
+          <h5><ion-label color="dark">الكمية الإفتتاحية :</ion-label> <ion-text><b>{{firstQty}}</b></ion-text></h5> 
+         </ion-col>
+          <ion-col size="3">
+            <h5><ion-label color="dark">الكمية الحالية :</ion-label> <ion-text><b>{{currenQty}}</b></ion-text></h5> 
+          </ion-col>
+        
+          <ion-col size="3">
+            <h5>
+              <ion-label color="dark">الكمية الصادرة  :</ion-label> <ion-text><b>{{payTotQty}}</b></ion-text>
+            </h5>
+          </ion-col>
+          <ion-col size="3">
+            <h5>
+            <ion-label color="dark">الكمية الواردة  :</ion-label> <ion-text><b>{{perchTotQty}}</b></ion-text>
+
+            </h5>
+          </ion-col>
+        </ion-row> 
+  </ion-grid>
+  </ion-card>
+
+
+  <ion-grid class="ion-margin-top" *ngIf="user_info && store_info">
+    <ion-row dir="rtl"  *ngIf="radioVal != 3">
+      <ion-col size="12" class="ion-no-padding">
+        <ion-grid> 
+          <ion-row>
+            <ion-col size="12">
+            <ion-card>
+               <table class="table">
+                 <tr>
+                  <th>التسلسل</th>
+                  <th>نوع الحركة</th>
+                  <th>التاريخ</th>
+                  <th>الكمية الوارده</th> 
+                  <th>الكمية الصادرة</th>  
+                  <th>العميل\المورد</th> 
+                  <th>سعر البيع</th>  
+                  <th>سعر الشراء</th>  
+                  <th>المجموع</th>  
+                  <th ><strong>عرض الفاتورة</strong></th>
+                  
+                 </tr>
+                 <tr *ngFor="let pay of payArray ; let i = index">
+                  <td>{{i+1}}</td>
+                  <!-- <td>{{pay.pay_id}}</td> -->
+                  <td>{{pay.type}}</td>
+                  <td>{{pay.pay_date}}</td>
+                  <td ><p *ngIf ="pay.type == 'مشتريات' || (pay.type == 'تسوية جردية' && +pay.quantity < 0)">{{toPositive(pay.quantity)}}</p></td>
+                  <td ><p *ngIf ="pay.type == 'مبيعات' || (pay.type == 'تسوية جردية' && +pay.quantity > 0)">{{toPositive(pay.quantity)}}</p></td> 
+                  <td> <ion-text *ngIf="pay.type == 'مبيعات' ||pay.type == 'مشتريات' ">{{pay.sub_name}}</ion-text>   </td>
+                  <td>{{pay.pay_price}}</td>
+                  <td>{{pay.perch_price}}</td>
+                  <td>{{toPositive(+pay.tot)}}</td>
+                  <td>
+                    <ion-button fill="clear" size="small" (click)="getPayInvoDetail(pay , pay.sub_name,'edit' )">
+                      <ion-icon name="create-outline" color="success" ></ion-icon>  
+                    </ion-button>
+                  </td>
+                  <!-- <td>
+                    <ion-button fill="clear" size="small" (click)="printInvo('printarea',pay)">
+                      <ion-icon name="print" color="brimary" ></ion-icon> 
+                    </ion-button>
+                  </td> -->
+                 </tr> 
+                 <tr  *ngIf="loading == true">
+                  <td> <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td>  <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                 </tr>
+                 <tr *ngIf="loading == true" >
+                  <td> <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td>  <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                 </tr>
+                 <tr  *ngIf="loading == true">
+                  <td> <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td>  <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                 </tr> 
+                
+               </table> 
+               <ion-row class="ion-justify-content-center ion-margin-top" *ngIf="showEmpty == true"> 
+                <ion-col size="4" class="ion-text-center">  
+                  <ion-label> 
+                    <ion-icon style="font-size: 30px;"  name="archive-outline"></ion-icon>
+                 </ion-label>
+                 <h4> لا توجد سجلات </h4> 
+                </ion-col>
+              </ion-row>
+            </ion-card>
+          </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-col> 
+    </ion-row>
+
+    <ion-row dir="rtl"  *ngIf="radioVal == 3">
+      <ion-col size="12" class="ion-no-padding">
+        <ion-grid> 
+          <ion-row>
+            <ion-col size="12">
+            <ion-card>
+               <table class="table">
+                 <tr>
+                  <th>التسلسل</th>
+                  <th> الصنف</th>
+                  <th>نوع الحركة</th> 
+                  <th>الكمية الوارده</th> 
+                  <th>الكمية الصادرة</th>  
+                  <th> الكمية الحالية</th>  
+                   
+                   
+                   
+                  
+                 </tr>
+                 <tr *ngFor="let pay of payArrayDaily ; let i = index">
+                  <td>{{i+1}}</td>
+                  <!-- <td>{{pay.pay_id}}</td> -->
+                  <td>{{pay.item_name}}</td>
+                  <td>{{pay.type}}</td>
+                  <td ><p *ngIf ="pay.type == 'مشتريات' || (pay.type == 'تسوية جردية' && +pay.quantity < 0)">{{toPositive(pay.quantity)}}</p></td>
+                  <td ><p *ngIf ="pay.type == 'مبيعات' || (pay.type == 'تسوية جردية' && +pay.quantity > 0)">{{toPositive(pay.quantity)}}</p></td> 
+                  <td>{{pay.currenQty}}</td>
+                  
+                   
+                  
+                  <!-- <td>
+                    <ion-button fill="clear" size="small" (click)="printInvo('printarea',pay)">
+                      <ion-icon name="print" color="brimary" ></ion-icon> 
+                    </ion-button>
+                  </td> -->
+                 </tr> 
+                 <tr  *ngIf="loading == true">
+                  <td> <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td>  <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  
+                 </tr>
+                 <tr *ngIf="loading == true" >
+                  <td> <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td>  <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                   
+                 </tr>
+                 <tr  *ngIf="loading == true">
+                  <td> <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td> 
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td>  <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                  <td><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></td>
+                   
+                 </tr>  
+               </table> 
+               <ion-row class="ion-justify-content-center ion-margin-top" *ngIf="showEmpty == true"> 
+                <ion-col size="4" class="ion-text-center">  
+                  <ion-label> 
+                    <ion-icon style="font-size: 30px;"  name="archive-outline"></ion-icon>
+                 </ion-label>
+                 <h4> لا توجد سجلات </h4> 
+                </ion-col>
+              </ion-row>
+            </ion-card>
+          </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-col> 
+    </ion-row>
+  </ion-grid> 
+
+</ion-content>
+<ion-footer *ngIf="payArray && radioVal != 3"> 
+  <ion-grid dir="rtl">
+    <ion-row>
+      <ion-col>
+        <h5>
+        <ion-label><ion-text>إجمالي الصادر : </ion-text>  <strong>{{+payTot}}</strong></ion-label>
+        </h5>
+      </ion-col>
+      <ion-col>
+        <h5>
+          <ion-label><ion-text>اجمالي الوارد  : </ion-text>  <strong>{{+perchTot}}</strong></ion-label>
+        </h5>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-footer>
