@@ -90,9 +90,9 @@ export class AuthServiceService {
         //console.log(  'sdlijlf' ,  this.USER_INFO)
         this.storage.set('USER_INFO', this.USER_INFO).then((response) => {
           if(this.device == 'mobile'){
-            this.router.navigate(['folder/sales-mob']);
+            this.router.navigate(['folder/pos-sales']);
           }else{
-            this.router.navigate(['folder/salessnd']);
+            this.router.navigate(['folder/pos-sales']);
           }  
         this.authState.next(true); 
       });

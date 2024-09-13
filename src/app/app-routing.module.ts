@@ -4,8 +4,12 @@ import { AuthGaurdService } from './auth/auth-gaurd.service';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'folder/sales',
+    redirectTo: 'folder/pos-sales',
     pathMatch: 'full'
+  },
+  {
+    path: 'folder/pos-sales',
+    loadChildren: () => import('./pos-sales/pos-sales.module').then( m => m.PosSalesPageModule)
   },
   {
     path: 'folder/login',
@@ -59,6 +63,7 @@ const routes: Routes = [
     path: 'print-modal',
     loadChildren: () => import('./print-modal/print-modal.module').then( m => m.PrintModalPageModule)
   },
+  
   {
     path: 'folder/edit-perch',
     loadChildren: () => import('./edit-perch/edit-perch.module').then( m => m.EditPerchPageModule)

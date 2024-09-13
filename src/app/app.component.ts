@@ -332,7 +332,7 @@ async auth (){
   this.authenticationService.authState.subscribe(state => {
     this.isAuth = this.authenticationService.isAuthenticated()
     if (state) { 
-      this.router.navigate(['folder/salessnd']);
+      this.router.navigate(['folder/pos-sales']);
     } else {
       this.router.navigate(['folder/login']);
     }

@@ -12,7 +12,7 @@ import { map, switchMap, tap } from 'rxjs/operators';
 
 
  export class ServicesService {
-  api = 'http://localhost/myaperpi/myapi/api/'
+  api = 'http://localhost/myaperpiPos/myapi/api/'
   // api :any =  'https://erp.hosamdev.com/myapi/api/'
   year : {id:any ,yearDesc:any ,yearStart :any,yearEnd:any}
   folderNo:any=''

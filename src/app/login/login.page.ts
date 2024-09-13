@@ -36,7 +36,7 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     this.getStore()
-  //  this.getCompany()
+    this.getCompany()
     this.getyear()
   }
 
